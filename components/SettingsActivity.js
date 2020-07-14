@@ -156,12 +156,14 @@ class SettingsActivity extends Component {
                                 </View>
                             </View>
 
-                            <View style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}>
+                            <TouchableOpacity 
+                            style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}
+                            onPress={() => this.props.navigation.navigate('Login') }>
 
                                 <View style={styles.second_half_view}>
                                     <Text style={styles.labeltextstyle}>{stringsoflanguages.Logout}</Text>
                                 </View>
-                            </View>
+                   </TouchableOpacity>
 
 
 

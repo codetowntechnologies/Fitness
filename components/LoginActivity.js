@@ -99,7 +99,8 @@ class LoginActivity extends Component {
                     <TouchableOpacity
                         style={styles.loginButtonStyle}
                         activeOpacity={.5}
-                        onPress={this.props.navigation.navigate('Dashboard')}>
+                        onPress={() => this.props.navigation.navigate('Dashboard') }>
+                  
 
 
                         <Text style={styles.buttonWhiteTextStyle}>Sign In</Text>
