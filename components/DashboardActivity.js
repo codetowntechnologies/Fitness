@@ -254,12 +254,12 @@ class DashboardActivity extends Component {
 
 
                     <TouchableOpacity style={styles.tabButtonStyle}
-                        onPress={() => { this.props.navigation.navigate('MyProfile') }}>
+                        onPress={() => { this.props.navigation.navigate('Settings') }}>
 
                         <Image source={require('../images/setting_inactive.png')}
                             style={styles.StyleProfileTab} />
 
-                        <Text style={styles.bottominactivetextstyle}>{stringsoflanguages.profile}</Text>
+                        <Text style={styles.bottominactivetextstyle}>{stringsoflanguages.settings}</Text>
 
 
                     </TouchableOpacity>

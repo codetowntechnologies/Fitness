@@ -8,6 +8,7 @@ import ForgotPasswordActivity from './components/ForgotPasswordActivity';
 import DashboardActivity from './components/DashboardActivity';
 import NotificationActivity from './components/NotificationActivity';
 import MyProfileActivity from './components/MyProfileActivity';
+import SettingsActivity from './components/SettingsActivity';
 
 
 
@@ -21,6 +22,7 @@ const NavStack = createStackNavigator(
         Dashboard: { screen: DashboardActivity },
         Notification: { screen: NotificationActivity },
         MyProfile: { screen: MyProfileActivity },
+        Settings: { screen: SettingsActivity },
         
     },
     {
