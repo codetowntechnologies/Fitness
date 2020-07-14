@@ -33,7 +33,7 @@ function Item({ item }) {
 }
 
 
-class DashboardActivity extends Component {
+class MyVideosActivity extends Component {
 
     constructor(props) {
         super(props);
@@ -178,7 +178,7 @@ class DashboardActivity extends Component {
                     >
 
                         {/* <Image source={require('../images/home_menu.png')}
-style={styles.MenuHomeIconStyle} /> */}
+        style={styles.MenuHomeIconStyle} /> */}
 
                     </TouchableOpacity>
 
@@ -186,12 +186,11 @@ style={styles.MenuHomeIconStyle} /> */}
                     <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}
                     >
 
-                        <Text style={styles.screentitle}>MENEZES PILATES</Text>
+                        <Text style={styles.screentitle}>My Videos</Text>
 
                     </TouchableOpacity>
 
                 </View>
-
 
                 {/* 
                 <ScrollView
@@ -229,17 +228,17 @@ style={styles.MenuHomeIconStyle} /> */}
                     <TouchableOpacity style={styles.tabButtonStyle}
                         onPress={() => { this.props.navigation.navigate('Dashboard') }}>
 
-                        <Image source={require('../images/home_active.png')}
+                        <Image source={require('../images/home_inactive.png')}
                             style={styles.StyleHomeTab} />
 
-                        <Text style={styles.bottomactivetextstyle}>{stringsoflanguages.Home}</Text>
+                        <Text style={styles.bottominactivetextstyle}>{stringsoflanguages.Home}</Text>
 
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styles.tabButtonStyle}
-                        onPress={() => { this.props.navigation.navigate('MyVideos') }}>
+                        onPress={() => { this.props.navigation.navigate('Dashboard') }}>
 
-                        <Image source={require('../images/video_inactive.png')}
+                        <Image source={require('../images/video_active.png')}
                             style={styles.StyleVideoTab} />
 
                         <Text style={styles.bottomvideotextstyle}>{stringsoflanguages.my_videos}</Text>
@@ -324,7 +323,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     listItem: {
-
         marginTop: 10,
         flex: 1,
         alignSelf: "center",
@@ -364,7 +362,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     bottomvideotextstyle: {
-        color: "#887F82",
+        color: "#FB3954",
         fontSize: 8,
         marginRight: 40,
         marginTop: 3,
@@ -421,7 +419,7 @@ const styles = StyleSheet.create({
         height: 50,
         backgroundColor: '#FB3954'
     },
-    screentitle: {
+     screentitle: {
         color: "white",
         fontSize: 20,
         textAlign: 'center'
@@ -429,5 +427,5 @@ const styles = StyleSheet.create({
 
 });
 
-export default DashboardActivity;
+export default MyVideosActivity;
 

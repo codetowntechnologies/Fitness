@@ -211,7 +211,7 @@ class NotificationActivity extends Component {
                         <Image source={require('../images/home_inactive.png')}
                             style={styles.StyleHomeTab} />
 
-                        <Text style={styles.bottominactivetextstyle}>{stringsoflanguages.home_menu}</Text>
+                        <Text style={styles.bottominactivetextstyle}>{stringsoflanguages.Home}</Text>
 
                     </TouchableOpacity>
 
@@ -407,13 +407,12 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         height: 50,
         backgroundColor: '#FB3954'
-    }, screentitle: {
+    },
+     screentitle: {
         color: "white",
         fontSize: 20,
         textAlign: 'center'
     },
-
-
 });
 
 export default NotificationActivity;

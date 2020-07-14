@@ -176,7 +176,7 @@ class MyProfileActivity extends Component {
                                     <Image source={require('../images/home_inactive.png')}
                                         style={styles.StyleHomeTab} />
 
-                                    <Text style={styles.bottominactivetextstyle}>{stringsoflanguages.home_menu}</Text>
+                                    <Text style={styles.bottominactivetextstyle}>{stringsoflanguages.Home}</Text>
 
                                 </TouchableOpacity>
 

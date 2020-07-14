@@ -9,6 +9,7 @@ import DashboardActivity from './components/DashboardActivity';
 import NotificationActivity from './components/NotificationActivity';
 import MyProfileActivity from './components/MyProfileActivity';
 import SettingsActivity from './components/SettingsActivity';
+import MyVideosActivity from './components/MyVideosActivity';
 
 
 
@@ -23,6 +24,7 @@ const NavStack = createStackNavigator(
         Notification: { screen: NotificationActivity },
         MyProfile: { screen: MyProfileActivity },
         Settings: { screen: SettingsActivity },
+        MyVideos : {screen : MyVideosActivity}
         
     },
     {

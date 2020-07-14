@@ -3,6 +3,7 @@ import LocalizedStrings from 'react-native-localization';
 const strings = new LocalizedStrings({
  
   "en":{
+    Home: "Home", 
     notification_small: 'Notification',
     profile: 'profile',
     my_videos: 'My Videos',
