@@ -15,7 +15,8 @@ const strings = new LocalizedStrings({
     change_password: 'Change Password',
     notification: 'Notification',
     who_we_are: 'Who we are',
-    Logout: 'logout'
+    Logout: 'logout',
+    subscribe: 'Subscribe',
 
   }
 });

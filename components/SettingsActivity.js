@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 import stringsoflanguages from '../components/locales/stringsoflanguages';
-import ActionButton from 'react-native-circular-action-menu';
 
 
 class SettingsActivity extends Component {
@@ -86,12 +85,9 @@ class SettingsActivity extends Component {
 
                             <View style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}>
 
-                                {/* <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center' }}>
+                                <Image source={require('../images/setting_profile_icon.png')}
+                                    style={styles.StyleMenuIcon} />
 
-                                    <Image source={require('../images/setting_profile_icon.png')}
-                                        style={styles.StyleMenuIcon} />
-
-                                </TouchableOpacity> */}
 
 
                                 <View style={styles.second_half_view}>
@@ -105,12 +101,8 @@ class SettingsActivity extends Component {
 
                             <View style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}>
 
-                                {/* <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center' }}>
-
-                                    <Image source={require('../images/setting_profile_icon.png')}
-                                        style={styles.StyleMenuIcon} />
-
-                                </TouchableOpacity> */}
+                                <Image source={require('../images/my_subscription.png')}
+                                    style={styles.StyleSubscribedVideo} />
 
 
                                 <View style={styles.second_half_view}>
@@ -124,15 +116,22 @@ class SettingsActivity extends Component {
 
                             <View style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}>
 
+                                <Image source={require('../images/video_setting.png')}
+                                    style={styles.StyleVideoTab} />
+
 
                                 <View style={styles.second_half_view}>
-                                    <Text style={styles.labeltextstyle}>{stringsoflanguages.subscribed_videos}</Text>
+                                    <Text style={styles.subscribe_level_text}>{stringsoflanguages.subscribed_videos}</Text>
                                 </View>
                             </View>
 
 
 
-                            <View style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', padding: 10, marginTop:5 }}>
+
+                                <Image source={require('../images/change_password.png')}
+                                    style={styles.StyleChangePassword} />
+
 
                                 <View style={styles.second_half_view}>
                                     <Text style={styles.labeltextstyle}>{stringsoflanguages.change_password}</Text>
@@ -141,29 +140,43 @@ class SettingsActivity extends Component {
 
 
 
-                            <View style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}>
+                            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}
+                             onPress={() => { this.props.navigation.navigate('Notification') }}>
+
+                                <Image source={require('../images/notification.png')}
+                                    style={styles.StyleNotificationIcon} />
+
 
                                 <View style={styles.second_half_view}>
                                     <Text style={styles.labeltextstyle}>{stringsoflanguages.notification}</Text>
                                 </View>
-                            </View>
+                            </TouchableOpacity>
 
 
-                            <View style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}>
+                            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}
+                             onPress={() => this.props.navigation.navigate('WhoWeAre') }>
+
+                                <Image source={require('../images/who_we_are.png')}
+                                    style={styles.StyleMenuIcon} />
 
                                 <View style={styles.second_half_view}>
                                     <Text style={styles.labeltextstyle}>{stringsoflanguages.who_we_are}</Text>
-                                </View>
-                            </View>
 
-                            <TouchableOpacity 
-                            style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}
-                            onPress={() => this.props.navigation.navigate('Login') }>
+                                </View>
+
+                            </TouchableOpacity>
+
+                            <TouchableOpacity
+                                style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}
+                                onPress={() => this.props.navigation.navigate('Login')}>
+
+                                <Image source={require('../images/logout_icon.png')}
+                                    style={styles.StyleMenuIcon} />
 
                                 <View style={styles.second_half_view}>
                                     <Text style={styles.labeltextstyle}>{stringsoflanguages.Logout}</Text>
                                 </View>
-                   </TouchableOpacity>
+                            </TouchableOpacity>
 
 
 
@@ -201,20 +214,20 @@ class SettingsActivity extends Component {
 
 
 
-                                <View style={{ position: 'absolute', alignSelf: 'center', backgroundColor: '#fffff', width: 70, height: 100, bottom: 5, zIndex: 10 }}>
+                                <View style={styles.CircleShapeView}>
 
-                                    <View style={{ flex: 1 }}>
-                                        <ActionButton
-                                            buttonColor="#ffffff"
-                                            onPress={() => {
+                                    <TouchableOpacity style={{ flex: .20, alignItems: 'center', justifyContent: 'center' }}
+                                    >
 
-                                                this.props.navigation.navigate('ServiceContractScreen1')
+                                        <Image source={require('../images/plus_icon.png')}
+                                            style={styles.plusiconstyle}
+                                        />
 
-                                            }}>
+                                        <Text style={styles.bottominactivetextstyle}>{stringsoflanguages.subscribe}</Text>
+
+                                    </TouchableOpacity>
 
 
-                                        </ActionButton>
-                                    </View>
                                 </View>
 
 
@@ -297,10 +310,19 @@ const styles = StyleSheet.create({
     },
     labeltextstyle: {
         color: '#4D4D4D',
-        marginLeft: 10,
+        marginLeft:21,
         fontSize: RFPercentage(2),
         textAlign: 'left'
     },
+
+    subscribe_level_text: {
+        color: '#4D4D4D',
+        marginLeft: 10,
+        marginTop:10,
+        fontSize: RFPercentage(2),
+        textAlign: 'left'
+    },
+
     bottomactivetextstyle: {
         color: "#FB3954",
         fontSize: 8,
@@ -326,7 +348,7 @@ const styles = StyleSheet.create({
     },
     StyleVideoTab: {
         marginTop: 11,
-        marginRight: 40,
+        marginRight: 10,
         width: 38,
         height: 23,
         alignSelf: 'center',
@@ -336,7 +358,7 @@ const styles = StyleSheet.create({
     bottomvideotextstyle: {
         color: "#887F82",
         fontSize: 8,
-        marginRight: 40,
+        marginRight: 10,
         marginTop: 3,
         textAlign: 'center',
     },
@@ -344,7 +366,7 @@ const styles = StyleSheet.create({
         marginTop: 9,
         width: 25,
         height: 30,
-        marginLeft: 40,
+        marginLeft: 10,
         alignSelf: 'center',
         alignItems: 'center',
         justifyContent: 'center',
@@ -352,7 +374,7 @@ const styles = StyleSheet.create({
     bottomnotificationtextstyle: {
         color: "#887F82",
         fontSize: 8,
-        marginLeft: 40,
+        marginLeft: 10,
         marginTop: 3,
         textAlign: 'center'
     },
@@ -391,8 +413,29 @@ const styles = StyleSheet.create({
         width: 300
     },
     StyleMenuIcon: {
-        width: 50,
-        height: 60,
+        width: 30,
+        height: 35,
+        alignSelf: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    StyleNotificationIcon: {
+        width: 33,
+        height: 44,
+        alignSelf: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    StyleChangePassword: {
+        width: 35,
+        height: 35,
+        alignSelf: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    StyleSubscribedVideo: {
+        width: 35,
+        height: 35,
         alignSelf: 'center',
         alignItems: 'center',
         justifyContent: 'center',
@@ -401,16 +444,35 @@ const styles = StyleSheet.create({
         flex: .80,
         justifyContent: 'center',
         marginLeft: 5,
-        marginTop: 10,
         alignSelf: 'center'
     },
     profileNameStyle: {
         color: 'white',
         marginLeft: 10,
-        marginTop:20,
+        marginTop: 20,
         fontSize: RFPercentage(2),
         textAlign: 'center'
 
+    },
+    CircleShapeView: {
+        width: 70,
+        height: 70,
+        borderRadius: 70 / 2,
+        marginBottom: 50,
+        backgroundColor: 'white',
+        shadowColor: '#ecf6fb',
+        elevation: 20,
+        shadowColor: 'grey',
+        shadowOffset: { width: 2, height: 2 },
+        shadowOpacity: 1
+    },
+    plusiconstyle: {
+        height: 30,
+        width: 30,
+        marginTop: 60,
+        alignSelf: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
 
 

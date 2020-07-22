@@ -227,20 +227,20 @@ class NotificationActivity extends Component {
 
 
 
-                    <View style={{ position: 'absolute', alignSelf: 'center', backgroundColor: '#fffff', width: 70, height: 100, bottom: 5, zIndex: 10 }}>
+                    <View style={styles.CircleShapeView}>
 
-                        <View style={{ flex: 1 }}>
-                            <ActionButton
-                                buttonColor="#ffffff"
-                                onPress={() => {
+                        <TouchableOpacity style={{ flex: .20, alignItems: 'center', justifyContent: 'center' }}
+                        >
 
-                                    this.props.navigation.navigate('ServiceContractScreen1')
+                            <Image source={require('../images/plus_icon.png')}
+                                style={styles.plusiconstyle}
+                            />
 
-                                }}>
+                            <Text style={styles.bottominactivetextstyle}>{stringsoflanguages.subscribe}</Text>
+
+                        </TouchableOpacity>
 
 
-                            </ActionButton>
-                        </View>
                     </View>
 
 
@@ -261,7 +261,7 @@ class NotificationActivity extends Component {
                         <Image source={require('../images/setting_inactive.png')}
                             style={styles.StyleProfileTab} />
 
-                        <Text style={styles.bottominactivetextstyle}>{stringsoflanguages.profile}</Text>
+                        <Text style={styles.bottominactivetextstyle}>{stringsoflanguages.settings}</Text>
 
 
                     </TouchableOpacity>
@@ -331,7 +331,7 @@ const styles = StyleSheet.create({
     },
     StyleVideoTab: {
         marginTop: 11,
-        marginRight: 40,
+        marginRight: 10,
         width: 38,
         height: 23,
         alignSelf: 'center',
@@ -341,7 +341,7 @@ const styles = StyleSheet.create({
     bottomvideotextstyle: {
         color: "#887F82",
         fontSize: 8,
-        marginRight: 40,
+        marginRight: 10,
         marginTop: 3,
         textAlign: 'center',
     },
@@ -349,7 +349,7 @@ const styles = StyleSheet.create({
         marginTop: 9,
         width: 25,
         height: 30,
-        marginLeft: 40,
+        marginLeft: 10,
         alignSelf: 'center',
         alignItems: 'center',
         justifyContent: 'center',
@@ -357,7 +357,7 @@ const styles = StyleSheet.create({
     bottomnotificationtextstyle: {
         color: "#FB3954",
         fontSize: 8,
-        marginLeft: 40,
+        marginLeft: 10,
         marginTop: 3,
         textAlign: 'center'
     },
@@ -408,10 +408,30 @@ const styles = StyleSheet.create({
         height: 50,
         backgroundColor: '#FB3954'
     },
-     screentitle: {
+    screentitle: {
         color: "white",
         fontSize: 20,
         textAlign: 'center'
+    },
+    CircleShapeView: {
+        width: 70,
+        height: 70,
+        borderRadius: 70 / 2,
+        marginBottom: 50,
+        backgroundColor: 'white',
+        shadowColor: '#ecf6fb',
+        elevation: 20,
+        shadowColor: 'grey',
+        shadowOffset: { width: 2, height: 2 },
+        shadowOpacity: 1
+    },
+    plusiconstyle: {
+        height: 30,
+        width: 30,
+        marginTop: 60,
+        alignSelf: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
 });
 

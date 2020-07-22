@@ -12,22 +12,37 @@ import {
 } from 'react-native';
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 import stringsoflanguages from '../components/locales/stringsoflanguages';
-import ActionButton from 'react-native-circular-action-menu';
-
 
 
 function Item({ item }) {
     return (
         <View style={styles.listItem}>
-            <Image source={{ uri: item.photo }}
-                style={{ width: 400, height: 300, borderTopLeftRadius: 20, borderTopRightRadius: 20 }} />
-            {/* <View style={{ alignItems: "center", flex: 1 }}>
-                <Text style={{ fontWeight: "bold" }}>{item.name}</Text>
-                <Text>{item.position}</Text>
+            <ImageBackground source={{ uri: item.photo }}
+                style={{ width: 400, height: 300,   justifyContent: 'center' }}
+                imageStyle={{ borderTopLeftRadius: 20, borderTopRightRadius: 20 }}>
+                <Image source={require('../images/play_icon.png')}
+                    style={styles.playiconstyle} />
+
+            </ImageBackground>
+
+            <View style={styles.videoBottomView}>
+
+                <View style={{ flexDirection: 'row', flex: .75 }}>
+
+                    <Text style={styles.textpinktextstyle}>1. </Text>
+
+                    <Text style={styles.textblacktextstyle}>Menezes Pilates Floor 1</Text>
+                </View>
+
+                <View style={{ flexDirection: 'row', flex: .25 }}>
+
+                    <Text style={styles.textpinktextstyle}>$10/month</Text>
+
+                </View>
+
             </View>
-            <TouchableOpacity style={{ height: 50, width: 50, justifyContent: "center", alignItems: "center" }}>
-                <Text style={{ color: "green" }}>Call</Text>
-            </TouchableOpacity> */}
+
+
         </View>
     );
 }
@@ -248,20 +263,23 @@ style={styles.MenuHomeIconStyle} /> */}
 
 
 
-                    <View style={{ position: 'absolute', alignSelf: 'center', backgroundColor: '#fffff', width: 70, height: 100, bottom: 5, zIndex: 10 }}>
+                    <View style={styles.CircleShapeView}>
 
-                        <View style={{ flex: 1 }}>
-                            <ActionButton
-                                buttonColor="#ffffff"
-                                onPress={() => {
-                                    this.props.navigation.navigate('Login')
+                        <TouchableOpacity style={{ flex: .20, alignItems: 'center', justifyContent: 'center' }}
+                        >
 
-                                }}>
+                            <Image source={require('../images/plus_icon.png')}
+                                style={styles.plusiconstyle}
+                            />
+
+                            <Text style={styles.bottominactivetextstyle}>{stringsoflanguages.subscribe}</Text>
+
+                        </TouchableOpacity>
 
 
-                            </ActionButton>
-                        </View>
                     </View>
+
+
 
 
                     <TouchableOpacity style={styles.tabButtonStyle}
@@ -324,11 +342,12 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     listItem: {
-
+        marginLeft: 5,
+        marginRight: 5,
         marginTop: 10,
         flex: 1,
         alignSelf: "center",
-        flexDirection: "row",
+        flexDirection: "column",
 
     },
     bottomactivetextstyle: {
@@ -356,7 +375,7 @@ const styles = StyleSheet.create({
     },
     StyleVideoTab: {
         marginTop: 11,
-        marginRight: 40,
+        marginRight: 10,
         width: 38,
         height: 23,
         alignSelf: 'center',
@@ -366,7 +385,7 @@ const styles = StyleSheet.create({
     bottomvideotextstyle: {
         color: "#887F82",
         fontSize: 8,
-        marginRight: 40,
+        marginRight: 10,
         marginTop: 3,
         textAlign: 'center',
     },
@@ -374,7 +393,7 @@ const styles = StyleSheet.create({
         marginTop: 9,
         width: 25,
         height: 30,
-        marginLeft: 40,
+        marginLeft: 10,
         alignSelf: 'center',
         alignItems: 'center',
         justifyContent: 'center',
@@ -382,7 +401,7 @@ const styles = StyleSheet.create({
     bottomnotificationtextstyle: {
         color: "#887F82",
         fontSize: 8,
-        marginLeft: 40,
+        marginLeft: 10,
         marginTop: 3,
         textAlign: 'center'
     },
@@ -426,6 +445,63 @@ const styles = StyleSheet.create({
         fontSize: 20,
         textAlign: 'center'
     },
+    CircleShapeView: {
+        width: 70,
+        height: 70,
+        borderRadius: 70 / 2,
+        marginBottom: 50,
+        backgroundColor: 'white',
+        shadowColor: '#ecf6fb',
+        elevation: 20,
+        shadowColor: 'grey',
+        shadowOffset: { width: 2, height: 2 },
+        shadowOpacity: 1
+    },
+    plusiconstyle: {
+        height: 30,
+        width: 30,
+        marginTop: 60,
+        alignSelf: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    videoBottomView: {
+        height: 50,
+        width: 400,
+        borderBottomLeftRadius: 10,
+        borderBottomRightRadius: 10,
+        padding: 10,
+        shadowColor: '#ecf6fb',
+        elevation: 20,
+        shadowColor: 'grey',
+        shadowOffset: { width: 2, height: 2 },
+        shadowOpacity: 1,
+        flexDirection: 'row',
+        backgroundColor: '#FFFFFF',
+        alignItems: 'center'
+    },
+    textblacktextstyle: {
+        fontSize: 15,
+        color: '#1B273E',
+        fontWeight: 'bold',
+    },
+    textpinktextstyle: {
+        fontSize: 15,
+        fontWeight: 'bold',
+        color: '#FB3954',
+        textAlign: 'right',
+        marginRight: 3
+    },
+    playiconstyle: {
+        height: 70,
+        width: 70,
+        alignSelf: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+
+
+
 
 });
 
