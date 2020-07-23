@@ -216,7 +216,7 @@ class NotificationActivity extends Component {
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styles.tabButtonStyle}
-                        onPress={() => { this.props.navigation.navigate('Dashboard') }}>
+                        onPress={() => { this.props.navigation.navigate('MyVideos') }}>
 
                         <Image source={require('../images/video_inactive.png')}
                             style={styles.StyleVideoTab} />
@@ -256,7 +256,8 @@ class NotificationActivity extends Component {
 
 
                     <TouchableOpacity style={styles.tabButtonStyle}
-                        onPress={() => { this.props.navigation.navigate('Contactus') }}>
+                        onPress={() => { this.props.navigation.navigate('Settings') }}>
+
 
                         <Image source={require('../images/setting_inactive.png')}
                             style={styles.StyleProfileTab} />

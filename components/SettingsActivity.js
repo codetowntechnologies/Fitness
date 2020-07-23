@@ -203,7 +203,7 @@ class SettingsActivity extends Component {
                                 </TouchableOpacity>
 
                                 <TouchableOpacity style={styles.tabButtonStyle}
-                                    onPress={() => { this.props.navigation.navigate('Dashboard') }}>
+                                    onPress={() => { this.props.navigation.navigate('MyVideos') }}>
 
                                     <Image source={require('../images/video_inactive.png')}
                                         style={styles.StyleVideoTab} />
@@ -232,7 +232,7 @@ class SettingsActivity extends Component {
 
 
                                 <TouchableOpacity style={styles.tabButtonStyle}
-                                >
+                                 onPress={() => { this.props.navigation.navigate('Notification') }}>
 
                                     <Image source={require('../images/bell_inactive.png')}
                                         style={styles.styleNotificationTab} />

@@ -8,7 +8,7 @@ import {
     Image
 } from 'react-native';
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
-
+import stringsoflanguages from './locales/stringsoflanguages';
 
 class LoginActivity extends Component {
 
@@ -45,11 +45,16 @@ class LoginActivity extends Component {
 
 
                 <View style={{
-                    flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: '#FB4252',
+                    flexDirection: 'column', alignItems: 'center', justifyContent: 'center', backgroundColor: '#FB4252',
                     flex: .4, width: '100%'
+
 
                 }}>
 
+                    <Image source={require('../images/logo.png')}
+                        style={styles.logoStyle} />
+
+                    <Text style={styles.screentitle}>MENEZES PILATES</Text>
 
                 </View>
 
@@ -99,8 +104,8 @@ class LoginActivity extends Component {
                     <TouchableOpacity
                         style={styles.loginButtonStyle}
                         activeOpacity={.5}
-                        onPress={() => this.props.navigation.navigate('Dashboard') }>
-                  
+                        onPress={() => this.props.navigation.navigate('Dashboard')}>
+
 
 
                         <Text style={styles.buttonWhiteTextStyle}>Sign In</Text>
@@ -233,8 +238,13 @@ const styles = StyleSheet.create({
         shadowOpacity: 1
     },
     ImageIconStyle: {
-        height: 25, 
+        height: 25,
         width: 25,
+        alignSelf: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    logoStyle: {
         alignSelf: 'center',
         alignItems: 'center',
         justifyContent: 'center',
@@ -245,6 +255,12 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    screentitle: {
+        color: "white",
+        fontSize: 20,
+        textAlign: 'center',
+        fontWeight: 'bold'
     },
 
 });
