@@ -24,7 +24,11 @@ const strings = new LocalizedStrings({
     please_enter_phone_number: 'Please enter phone number',
     please_enter_gender: 'Please enter gender',
     please_enter_location: 'Please enter location',
-    please_enter_password: 'Please enter password'
+    please_enter_password: 'Please enter password',
+    no_videos_found:'No Videos Found',
+    didnt_received_code: 'Didn\'t receive code?',
+    send_again: 'send again',
+
   }
 });
 

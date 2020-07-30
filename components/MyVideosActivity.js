@@ -12,13 +12,13 @@ import {
 } from 'react-native';
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 import stringsoflanguages from '../components/locales/stringsoflanguages';
-import ActionButton from 'react-native-circular-action-menu';
-
+import AsyncStorage from '@react-native-community/async-storage';
 
 function Item({ item }) {
     return (
         <View style={styles.listItem}>
-            <ImageBackground source={{ uri: item.photo }}
+
+            <ImageBackground source={{ uri: 'https://digimonk.co/fitness/uploads/video_logo/' + item.image }}
                 style={{ width: 400, height: 300, justifyContent: 'center' }}
                 imageStyle={{ borderTopLeftRadius: 20, borderTopRightRadius: 20 }}>
                 <Image source={require('../images/play_icon.png')}
@@ -28,16 +28,16 @@ function Item({ item }) {
 
             <View style={styles.videoBottomView}>
 
-                <View style={{ flexDirection: 'row', flex: .75 }}>
+                <View style={{ flexDirection: 'row', flex: .60 }}>
 
-                    <Text style={styles.textpinktextstyle}>1. </Text>
+                    <Text style={styles.textpinktextstyle}>{item.id} .</Text>
 
-                    <Text style={styles.textblacktextstyle}>Menezes Pilates Floor 1</Text>
+                    <Text style={styles.textblacktextstyle}>{item.name}</Text>
                 </View>
 
-                <View style={{ flexDirection: 'row', flex: .25 }}>
+                <View style={{ flexDirection: 'row', flex: .40, justifyContent: 'center', alignItems: 'flex-end' }}>
 
-                    <Text style={styles.textpinktextstyle}>$10/month</Text>
+                    <Text style={styles.textpinktextstyle}> ${item.price}/{item.monthname}</Text>
 
                 </View>
 
@@ -52,71 +52,10 @@ class MyVideosActivity extends Component {
 
     constructor(props) {
         super(props);
-        //  this.videoList = this.videoList.bind(this);
+        this.videoList = this.videoList.bind(this);
         this.state = {
-            //    baseUrl: 'https://digimonk.co/fitness/api/Api/videoList',
-            data: [
-                {
-                    "name": "Miyah Myles",
-                    "email": "miyah.myles@gmail.com",
-                    "position": "Data Entry Clerk",
-                    "photo": "https:\/\/tinyfac.es\/data\/avatars\/B0298C36-9751-48EF-BE15-80FB9CD11143-500w.jpeg"
-                },
-                {
-                    "name": "June Cha",
-                    "email": "june.cha@gmail.com",
-                    "position": "Sales Manager",
-                    "photo": "https:\/\/tinyfac.es\/data\/avatars\/B0298C36-9751-48EF-BE15-80FB9CD11143-500w.jpeg"
-                },
-                {
-                    "name": "Iida Niskanen",
-                    "email": "iida.niskanen@gmail.com",
-                    "position": "Sales Manager",
-                    "photo": "https:\/\/tinyfac.es\/data\/avatars\/B0298C36-9751-48EF-BE15-80FB9CD11143-500w.jpeg"
-                },
-                {
-                    "name": "Renee Sims",
-                    "email": "renee.sims@gmail.com",
-                    "position": "Medical Assistant",
-                    "photo": "https:\/\/tinyfac.es\/data\/avatars\/B0298C36-9751-48EF-BE15-80FB9CD11143-500w.jpeg"
-                },
-                {
-                    "name": "Jonathan Nu\u00f1ez",
-                    "email": "jonathan.nu\u00f1ez@gmail.com",
-                    "position": "Clerical",
-                    "photo": "https:\/\/tinyfac.es\/data\/avatars\/B0298C36-9751-48EF-BE15-80FB9CD11143-500w.jpeg"
-                },
-                {
-                    "name": "Sasha Ho",
-                    "email": "sasha.ho@gmail.com",
-                    "position": "Administrative Assistant",
-                    "photo": "https:\/\/tinyfac.es\/data\/avatars\/B0298C36-9751-48EF-BE15-80FB9CD11143-500w.jpeg"
-                },
-                {
-                    "name": "Abdullah Hadley",
-                    "email": "abdullah.hadley@gmail.com",
-                    "position": "Marketing",
-                    "photo": "https:\/\/tinyfac.es\/data\/avatars\/B0298C36-9751-48EF-BE15-80FB9CD11143-500w.jpeg"
-                },
-                {
-                    "name": "Thomas Stock",
-                    "email": "thomas.stock@gmail.com",
-                    "position": "Product Designer",
-                    "photo": "https:\/\/tinyfac.es\/data\/avatars\/B0298C36-9751-48EF-BE15-80FB9CD11143-500w.jpeg"
-                },
-                {
-                    "name": "Veeti Seppanen",
-                    "email": "veeti.seppanen@gmail.com",
-                    "position": "Product Designer",
-                    "photo": "https:\/\/tinyfac.es\/data\/avatars\/B0298C36-9751-48EF-BE15-80FB9CD11143-500w.jpeg"
-                },
-                {
-                    "name": "Bonnie Riley",
-                    "email": "bonnie.riley@gmail.com",
-                    "position": "Marketing",
-                    "photo": "https:\/\/tinyfac.es\/data\/avatars\/B0298C36-9751-48EF-BE15-80FB9CD11143-500w.jpeg"
-                }
-            ]
+            baseUrl: 'https://digimonk.co/fitness/api/Api/subscribedVideoList',
+            userId: '',
         };
     }
 
@@ -134,53 +73,50 @@ class MyVideosActivity extends Component {
     };
 
     componentDidMount() {
-        //  this.videoList();
 
+        AsyncStorage.getItem('@user_id').then((userId) => {
+            if (userId) {
+                this.setState({ userId: userId });
+                console.log("user id ====" + this.state.userId);
+                this.videoList();
+            }
+        });
     }
 
-    // videoList() {
 
-    //     var url = this.state.baseUrl;
-    //     console.log('url:' + url);
-    //     fetch(url, {
-    //       method: 'GET',
-    //       headers: {
-    //         'Content-Type': 'application/json',
-    //       },
-    //     //   body: JSON.stringify({
-    //     //     secure_pin: 'digimonk',
-    //     //     customer_id: this.state.userId
-    //     //   }),
-    //     })
-    //       .then(response => response.json())
-    //       .then(responseData => {
-    //         this.hideLoading();
-    //         if (responseData.status == '0') {
-    //           alert(responseData.message);
-    //         } else {
-    //           this.setState({ data: responseData.data});
-    //         }
+    videoList() {
 
-    //         console.log('response object:', responseData);
-    //       })
-    //       .catch(error => {
-    //         this.hideLoading();
-    //         console.error(error);
-    //       })
+        var url = this.state.baseUrl;
+        console.log('url:' + url);
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userid: this.state.userId
+                
+            }),
+        })
+            .then(response => response.json())
+            .then(responseData => {
+                this.hideLoading();
+                if (responseData.status == '0') {
+                    alert(responseData.message);
+                } else {
+                    this.setState({ data: responseData.data });
+                }
 
-    //       .done();
-    //   }
+                console.log('response object:', responseData);
+            })
+            .catch(error => {
+                this.hideLoading();
+                console.error(error);
+            })
 
-    actionOnRow(item) {
-
-        // this.props.navigation.navigate('QuestionLogDetail', {
-        //   item: item,
-        //   question_id: item.question_id
-        // })
-
-        // console.log('Selected Item :', item);
-
+            .done();
     }
+
 
     render() {
         return (
@@ -198,24 +134,26 @@ class MyVideosActivity extends Component {
                     </TouchableOpacity>
 
 
-                    <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}
+                    <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center', flex: .80 }}
                     >
 
                         <Text style={styles.screentitle}>My Videos</Text>
 
                     </TouchableOpacity>
 
-                </View>
 
-                {/* 
-                <ScrollView
-                    refreshControl={
-                        <RefreshControl 
-                            refreshing={this.state.refresh}
-                            onRefresh={() => this.onRefresh()}
-                            tintColor='#FFC33B'
-                        />
-                    }> */}
+                    <TouchableOpacity style={{
+                        flex: .10
+                    }}
+                    >
+
+                        <Image source={require('../images/small-user.png')}
+                            style={styles.MenuHomeUserIconStyle} />
+
+
+                    </TouchableOpacity>
+
+                </View>
 
                 <FlatList
                     style={{ flex: 1 }}
@@ -223,20 +161,19 @@ class MyVideosActivity extends Component {
 
                     renderItem={({ item }) => (
 
-                        <TouchableWithoutFeedback onPress={() => this.actionOnRow(item)}>
+                        <TouchableWithoutFeedback>
 
                             <View>
-                                <Item item={item} />
+                                <Item item={item}
+                                />
                             </View>
 
                         </TouchableWithoutFeedback>
 
                     )}
-                    keyExtractor={item => item.email}
+                    keyExtractor={item => item.id}
                     ListEmptyComponent={this.ListEmpty}
                 />
-
-                {/* </ScrollView> */}
 
                 <View style={styles.tabStyle}>
 
@@ -492,6 +429,14 @@ const styles = StyleSheet.create({
     playiconstyle: {
         height: 70,
         width: 70,
+        alignSelf: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    MenuHomeUserIconStyle: {
+        height: 30,
+        width: 25,
+        margin: 5,
         alignSelf: 'center',
         alignItems: 'center',
         justifyContent: 'center',

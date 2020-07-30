@@ -11,6 +11,9 @@ import MyProfileActivity from './components/MyProfileActivity';
 import SettingsActivity from './components/SettingsActivity';
 import MyVideosActivity from './components/MyVideosActivity';
 import WhoWeAreActivity from './components/WhoWeAreActivity';
+import MySubscriptionVideosActivity from './components/MySubscriptionVideosActivity';
+import DashboardDetailActivity from './components/DashboardDetailActivity';
+import OTPActivity from './components/OTPActivity';
 
 
 const NavStack = createStackNavigator(
@@ -24,7 +27,10 @@ const NavStack = createStackNavigator(
         MyProfile: { screen: MyProfileActivity },
         Settings: { screen: SettingsActivity },
         MyVideos : {screen : MyVideosActivity},
-        WhoWeAre: {screen : WhoWeAreActivity}
+        WhoWeAre: {screen : WhoWeAreActivity},
+        MySubscriptionVideos: {screen : MySubscriptionVideosActivity},
+        DashboardDetail: {screen : DashboardDetailActivity},
+        OTP : {screen : OTPActivity}
         
     },
     {

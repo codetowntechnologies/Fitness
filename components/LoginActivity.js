@@ -5,17 +5,22 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    Image
+    Image,
+    ActivityIndicator,
 } from 'react-native';
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 import stringsoflanguages from './locales/stringsoflanguages';
+import AsyncStorage from '@react-native-community/async-storage';
 
 class LoginActivity extends Component {
 
     constructor(props) {
         super(props);
+        this.logincall = this.logincall.bind(this);
         this.state = {
-
+            baseUrl: 'https://digimonk.co/fitness/api/Api/login',
+            phonenumber: '',
+            password: '',
         };
     }
 
@@ -35,9 +40,75 @@ class LoginActivity extends Component {
 
     componentDidMount() {
 
-
     }
 
+
+    CheckTextInput = () => {
+        //Handler for the Submit onPress
+        if (this.state.phonenumber != '') {
+            //Check for the Name TextInput
+            if (this.state.password != '') {
+                //Check for the Email TextInput
+                this.showLoading();
+                //console.log("registed token===" + this.state.deviceToken)
+                this.logincall();
+
+            } else {
+                alert(stringsoflanguages.please_enter_password);
+            }
+        } else {
+            alert(stringsoflanguages.please_enter_phone_number);
+        }
+    };
+
+
+    logincall() {
+
+        var url = this.state.baseUrl;
+        console.log('url:' + url);
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                phone: this.state.phonenumber,
+                password: this.state.password,
+            }),
+        })
+            .then(response => response.json())
+            .then(responseData => {
+                this.hideLoading();
+                if (responseData.status == '0') {
+                    alert(responseData.message);
+                } else {
+                    this.saveLoginUserData(responseData);
+                }
+                console.log(responseData);
+            })
+            .catch(error => {
+                this.hideLoading();
+                console.error(error);
+            })
+
+            .done();
+    }
+
+
+
+  async saveLoginUserData(responseData) {
+    try {
+
+      await AsyncStorage.setItem('@user_id', responseData.data.id.toString());
+      await AsyncStorage.setItem('@email', responseData.data.email.toString());
+      await AsyncStorage.setItem('@name', responseData.data.name.toString());
+      await AsyncStorage.setItem('@is_login', "1");
+      this.props.navigation.navigate('Dashboard') 
+
+    } catch (error) {
+      console.log("Error saving data" + error);
+    }
+  }
 
     render() {
         return (
@@ -63,6 +134,13 @@ class LoginActivity extends Component {
                     flex: .6, width: '100%', borderTopRightRadius: 30, borderTopLeftRadius: 30
                 }}>
 
+                    {this.state.loading && (
+                        <View style={styles.loading}>
+                            <ActivityIndicator size="large" color="#ffffff" />
+                        </View>
+                    )}
+
+
 
                     <View
                         style={styles.inputView}>
@@ -70,11 +148,29 @@ class LoginActivity extends Component {
                         <Image source={require('../images/phone_no.png')}
                             style={styles.ImageIconStyle} />
 
+
+                        <View style={{ flexDirection: 'row' }}>
+
+                            <TextInput
+                                placeholder="+61"
+                                placeholderTextColor="#C3C8D1"
+                                underlineColorAndroid="transparent"
+                                keyboardType='number-pad'
+                                underlineColorAndroid="#ADB6C1"
+                                editable={false}
+
+                            />
+
+                            <Image source={require('../images/down-arrow.png')}
+                                style={styles.arrowIconStyle} />
+
+                        </View>
+
                         <TextInput
                             placeholder="Phone Number"
                             placeholderTextColor="#C3C8D1"
                             underlineColorAndroid="transparent"
-                            style={styles.input}
+                            style={styles.inputphonenumber}
                             keyboardType='number-pad'
                             onChangeText={phonenumber => this.setState({ phonenumber })}
                         />
@@ -104,7 +200,7 @@ class LoginActivity extends Component {
                     <TouchableOpacity
                         style={styles.loginButtonStyle}
                         activeOpacity={.5}
-                        onPress={() => this.props.navigation.navigate('Dashboard')}>
+                        onPress={this.CheckTextInput}>
 
 
 
@@ -163,6 +259,14 @@ const styles = StyleSheet.create({
     input: {
         color: 'black',
         width: 300,
+        height: 50,
+        padding: 10,
+        textAlign: 'left',
+        backgroundColor: 'transparent'
+    },
+    inputphonenumber: {
+        color: 'black',
+        width: 250,
         height: 50,
         padding: 10,
         textAlign: 'left',
@@ -240,6 +344,13 @@ const styles = StyleSheet.create({
     ImageIconStyle: {
         height: 25,
         width: 25,
+        alignSelf: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    arrowIconStyle: {
+        height: 15,
+        width: 15,
         alignSelf: 'center',
         alignItems: 'center',
         justifyContent: 'center',

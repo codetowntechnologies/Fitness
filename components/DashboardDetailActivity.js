@@ -9,35 +9,54 @@ import {
     SafeAreaView,
     TouchableWithoutFeedback,
     ImageBackground,
-    
+    ScrollView
 } from 'react-native';
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 import stringsoflanguages from '../components/locales/stringsoflanguages';
-import AsyncStorage from '@react-native-community/async-storage';
+
 
 function Item({ item }) {
     return (
         <View style={styles.listItem}>
-            <View style={styles.listItemStyle}>
-                <View style={{ flex: 1, marginLeft: 10, padding: 10 }}>
-                    <Text style={{ color: '#887F82', fontSize: RFValue(12, 580) }}>{item.description}</Text>
-                    <Text style={{ color: "#767475", alignSelf: 'flex-end', marginTop: 10, fontSize: RFPercentage(1.5) }}>{item.created_at}</Text>
+
+            <ImageBackground source={{ uri: 'https://digimonk.co/fitness/uploads/video_logo/' + item.image }}
+                style={{ width: 400, height: 300, justifyContent: 'center' }}
+                imageStyle={{ borderTopLeftRadius: 20, borderTopRightRadius: 20 }}>
+                <Image source={require('../images/play_icon.png')}
+                    style={styles.playiconstyle} />
+
+            </ImageBackground>
+
+            <View style={styles.videoBottomView}>
+
+                <View style={{ flexDirection: 'row', flex: .60 }}>
+
+                    <Text style={styles.textpinktextstyle}>{item.id} .</Text>
+
+                    <Text style={styles.textblacktextstyle}>{item.name}</Text>
+                </View>
+
+                <View style={{ flexDirection: 'row', flex: .40, justifyContent: 'center', alignItems: 'flex-end' }}>
+
+                    <Text style={styles.textpinktextstyle}> ${item.price}/{item.monthname}</Text>
+
                 </View>
 
             </View>
+
+
         </View>
     );
 }
 
 
-class NotificationActivity extends Component {
+class DashboardDetailActivity extends Component {
 
     constructor(props) {
         super(props);
-        this.notificationList = this.notificationList.bind(this);
+        this.videoList = this.videoList.bind(this);
         this.state = {
-            baseUrl: 'https://digimonk.co/fitness/api/Api/getNotification',
-            userId: '',
+            baseUrl: 'https://digimonk.co/fitness/api/Api/videoList',
         };
     }
 
@@ -51,54 +70,13 @@ class NotificationActivity extends Component {
     }
 
     static navigationOptions = {
-        title: 'Notification'
+        title: 'Dashboard'
     };
 
     componentDidMount() {
         this.showLoading();
-        AsyncStorage.getItem('@user_id').then((userId) => {
-            if (userId) {
-                this.setState({ userId: userId });
-                console.log("user id ====" + this.state.userId);
-                this.notificationList();
-            }
-        });
-
+        this.videoList();
     }
-
-    notificationList() {
-
-        var url = this.state.baseUrl;
-        console.log('url:' + url);
-        fetch(url, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            user_id: this.state.userId
-          }),
-        })
-          .then(response => response.json())
-          .then(responseData => {
-            this.hideLoading();
-            if (responseData.status == '0') {
-              alert(responseData.message);
-            } else {
-              this.setState({ data: responseData.data});
-            }
-
-            console.log('response object:', responseData);
-          })
-          .catch(error => {
-            this.hideLoading();
-            console.error(error);
-          })
-
-          .done();
-      }
-
-
 
     ListEmpty = () => {
         return (
@@ -115,6 +93,36 @@ class NotificationActivity extends Component {
     };
 
 
+    videoList() {
+
+        var url = this.state.baseUrl;
+        console.log('url:' + url);
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(response => response.json())
+            .then(responseData => {
+                this.hideLoading();
+                if (responseData.status == '0') {
+                    alert(responseData.message);
+                } else {
+                    this.setState({ data: responseData.data });
+                }
+
+                console.log('response object:', responseData);
+            })
+            .catch(error => {
+                this.hideLoading();
+                console.error(error);
+            })
+
+            .done();
+    }
+
+
     render() {
         return (
             <SafeAreaView style={styles.container}>
@@ -122,21 +130,24 @@ class NotificationActivity extends Component {
                 <View style={styles.headerView}>
 
 
-                    <TouchableOpacity style={{ flex: .10, alignItems: 'center', justifyContent: 'center' }}
+                    <TouchableOpacity style={{
+                        flex: .10
+                    }}
                     >
 
-                        {/* <Image source={require('../images/home_menu.png')}
-                            style={styles.MenuHomeIconStyle} /> */}
+                        <Image source={require('../images/small-logo.png')}
+                            style={styles.MenuHomeIconStyle} />
 
                     </TouchableOpacity>
 
 
-                    <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center', flex: .8 }}
+                    <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center', flex: .80 }}
                     >
 
-                        <Text style={styles.screentitle}>Notifications</Text>
+                        <Text style={styles.screentitle}>MENEZES PILATES</Text>
 
                     </TouchableOpacity>
+
 
                     <TouchableOpacity style={{
                         flex: .10
@@ -150,16 +161,44 @@ class NotificationActivity extends Component {
                     </TouchableOpacity>
 
 
+                </View>
+
+
+                <View style={styles.listItem}>
+
+                    <ImageBackground source={{ uri: 'https://digimonk.co/fitness/uploads/video_logo/' + item.image }}
+                        style={{ width: 400, height: 300, justifyContent: 'center' }}
+                        imageStyle={{ borderTopLeftRadius: 20, borderTopRightRadius: 20 }}>
+                        <Image source={require('../images/play_icon.png')}
+                            style={styles.playiconstyle} />
+
+                    </ImageBackground>
+
+                    <View style={styles.videoBottomView}>
+
+                        <View style={{ flexDirection: 'row', flex: .60 }}>
+
+                            <Text style={styles.textpinktextstyle}>{item.id} .</Text>
+
+                            <Text style={styles.textblacktextstyle}>{item.name}</Text>
+                        </View>
+
+                        <View style={{ flexDirection: 'row', flex: .40, justifyContent: 'center', alignItems: 'flex-end' }}>
+
+                            <Text style={styles.textpinktextstyle}> ${item.price}/{item.monthname}</Text>
+
+                        </View>
+
+                    </View>
 
 
                 </View>
 
-
-                <FlatList
+                {/* <FlatList
                     style={{ flex: 1 }}
                     data={this.state.data}
 
-                    renderItem={({ item }) => (
+                    renderItem={({ item, index }) => (
 
                         <TouchableWithoutFeedback>
 
@@ -173,8 +212,7 @@ class NotificationActivity extends Component {
                     )}
                     keyExtractor={item => item.id}
                     ListEmptyComponent={this.ListEmpty}
-                />
-
+                /> */}
 
 
 
@@ -183,10 +221,10 @@ class NotificationActivity extends Component {
                     <TouchableOpacity style={styles.tabButtonStyle}
                         onPress={() => { this.props.navigation.navigate('Dashboard') }}>
 
-                        <Image source={require('../images/home_inactive.png')}
+                        <Image source={require('../images/home_active.png')}
                             style={styles.StyleHomeTab} />
 
-                        <Text style={styles.bottominactivetextstyle}>{stringsoflanguages.Home}</Text>
+                        <Text style={styles.bottomactivetextstyle}>{stringsoflanguages.Home}</Text>
 
                     </TouchableOpacity>
 
@@ -219,10 +257,12 @@ class NotificationActivity extends Component {
                     </View>
 
 
-                    <TouchableOpacity style={styles.tabButtonStyle}
-                    >
 
-                        <Image source={require('../images/bell_active.png')}
+
+                    <TouchableOpacity style={styles.tabButtonStyle}
+                        onPress={() => { this.props.navigation.navigate('Notification') }}>
+
+                        <Image source={require('../images/bell_inactive.png')}
                             style={styles.styleNotificationTab} />
 
                         <Text style={styles.bottomnotificationtextstyle}>{stringsoflanguages.notification_small}</Text>
@@ -233,7 +273,6 @@ class NotificationActivity extends Component {
                     <TouchableOpacity style={styles.tabButtonStyle}
                         onPress={() => { this.props.navigation.navigate('Settings') }}>
 
-
                         <Image source={require('../images/setting_inactive.png')}
                             style={styles.StyleProfileTab} />
 
@@ -241,10 +280,6 @@ class NotificationActivity extends Component {
 
 
                     </TouchableOpacity>
-
-
-
-
 
 
                 </View>
@@ -260,6 +295,8 @@ class NotificationActivity extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
         backgroundColor: '#F6F9FE'
     },
     loading: {
@@ -278,9 +315,13 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     listItem: {
+        marginLeft: 5,
+        marginRight: 5,
         marginTop: 10,
         flex: 1,
+        alignSelf: "center",
         flexDirection: "column",
+
     },
     bottomactivetextstyle: {
         color: "#FB3954",
@@ -331,7 +372,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     bottomnotificationtextstyle: {
-        color: "#FB3954",
+        color: "#887F82",
         fontSize: 8,
         marginLeft: 10,
         marginTop: 3,
@@ -357,20 +398,8 @@ const styles = StyleSheet.create({
         shadowColor: 'grey',
         shadowOffset: { width: 2, height: 2 },
         shadowOpacity: 1
-    },
-    listItemStyle: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#ffffff',
-        height: 60,
-        margin: 10,
-        elevation: 20,
-        shadowColor: 'grey',
-        borderRadius: 5,
-        shadowOffset: { width: 1, height: 1 },
-        shadowOpacity: 1
-    },
+    }
+    ,
     tabButtonStyle: {
         flex: .25,
         alignItems: 'center',
@@ -409,6 +438,43 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    videoBottomView: {
+        height: 50,
+        width: 400,
+        borderBottomLeftRadius: 10,
+        borderBottomRightRadius: 10,
+        padding: 10,
+        shadowColor: '#ecf6fb',
+        elevation: 20,
+        shadowColor: 'grey',
+        shadowOffset: { width: 2, height: 2 },
+        shadowOpacity: 1,
+        flexDirection: 'row',
+        backgroundColor: '#FFFFFF',
+        alignItems: 'center'
+    },
+    textblacktextstyle: {
+        fontSize: 15,
+        color: '#1B273E',
+        fontWeight: 'bold',
+    },
+    textpinktextstyle: {
+        fontSize: 15,
+        fontWeight: 'bold',
+        color: '#FB3954',
+        textAlign: 'right',
+        marginRight: 3
+    },
+    playiconstyle: {
+        height: 70,
+        width: 70,
+        alignSelf: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    MenuHomeIconStyle: {
+        marginTop: 10
+    },
     MenuHomeUserIconStyle: {
         height: 30,
         width: 25,
@@ -417,7 +483,37 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    smallcircleshapeview: {
+        width: 50,
+        height: 50,
+        margin: 10,
+        borderRadius: 30,
+        backgroundColor: 'white',
+        shadowColor: '#ecf6fb',
+        elevation: 20,
+        color: 'black',
+        textAlign: 'center',
+        shadowColor: 'grey',
+        shadowOpacity: 1,
+        alignItems: 'center'
+
+
+    },
+
+    smallcircletext: {
+        shadowColor: '#ecf6fb',
+        elevation: 20,
+        margin: 15,
+        color: 'black',
+        textAlign: 'center',
+        shadowColor: 'grey',
+        shadowOpacity: 1,
+        alignItems: 'center'
+
+
+    },
+
 });
 
-export default NotificationActivity;
+export default DashboardDetailActivity;
 

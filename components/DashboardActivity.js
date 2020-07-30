@@ -8,7 +8,8 @@ import {
     Image,
     SafeAreaView,
     TouchableWithoutFeedback,
-    ImageBackground
+    ImageBackground,
+    ScrollView
 } from 'react-native';
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 import stringsoflanguages from '../components/locales/stringsoflanguages';
@@ -17,8 +18,9 @@ import stringsoflanguages from '../components/locales/stringsoflanguages';
 function Item({ item }) {
     return (
         <View style={styles.listItem}>
-            <ImageBackground source={{ uri: item.photo }}
-                style={{ width: 400, height: 300,   justifyContent: 'center' }}
+
+            <ImageBackground source={{ uri: 'https://img-a.udemycdn.com/course/750x422/8075_b2b5_10.jpg' }}
+                style={{ width: 400, height: 300, justifyContent: 'center' }}
                 imageStyle={{ borderTopLeftRadius: 20, borderTopRightRadius: 20 }}>
                 <Image source={require('../images/play_icon.png')}
                     style={styles.playiconstyle} />
@@ -27,16 +29,16 @@ function Item({ item }) {
 
             <View style={styles.videoBottomView}>
 
-                <View style={{ flexDirection: 'row', flex: .75 }}>
+                <View style={{ flexDirection: 'row', flex: .60 }}>
 
-                    <Text style={styles.textpinktextstyle}>1. </Text>
+                    <Text style={styles.textpinktextstyle}>{item.id} .</Text>
 
-                    <Text style={styles.textblacktextstyle}>Menezes Pilates Floor 1</Text>
+                    <Text style={styles.textblacktextstyle}>{item.name}</Text>
                 </View>
 
-                <View style={{ flexDirection: 'row', flex: .25 }}>
+                <View style={{ flexDirection: 'row', flex: .40, justifyContent: 'center', alignItems: 'flex-end' }}>
 
-                    <Text style={styles.textpinktextstyle}>$10/month</Text>
+                    <Text style={styles.textpinktextstyle}> ${item.price}/{item.monthname}</Text>
 
                 </View>
 
@@ -52,71 +54,9 @@ class DashboardActivity extends Component {
 
     constructor(props) {
         super(props);
-        //  this.videoList = this.videoList.bind(this);
+        this.videoList = this.videoList.bind(this);
         this.state = {
-            //    baseUrl: 'https://digimonk.co/fitness/api/Api/videoList',
-            data: [
-                {
-                    "name": "Miyah Myles",
-                    "email": "miyah.myles@gmail.com",
-                    "position": "Data Entry Clerk",
-                    "photo": "https:\/\/tinyfac.es\/data\/avatars\/B0298C36-9751-48EF-BE15-80FB9CD11143-500w.jpeg"
-                },
-                {
-                    "name": "June Cha",
-                    "email": "june.cha@gmail.com",
-                    "position": "Sales Manager",
-                    "photo": "https:\/\/tinyfac.es\/data\/avatars\/B0298C36-9751-48EF-BE15-80FB9CD11143-500w.jpeg"
-                },
-                {
-                    "name": "Iida Niskanen",
-                    "email": "iida.niskanen@gmail.com",
-                    "position": "Sales Manager",
-                    "photo": "https:\/\/tinyfac.es\/data\/avatars\/B0298C36-9751-48EF-BE15-80FB9CD11143-500w.jpeg"
-                },
-                {
-                    "name": "Renee Sims",
-                    "email": "renee.sims@gmail.com",
-                    "position": "Medical Assistant",
-                    "photo": "https:\/\/tinyfac.es\/data\/avatars\/B0298C36-9751-48EF-BE15-80FB9CD11143-500w.jpeg"
-                },
-                {
-                    "name": "Jonathan Nu\u00f1ez",
-                    "email": "jonathan.nu\u00f1ez@gmail.com",
-                    "position": "Clerical",
-                    "photo": "https:\/\/tinyfac.es\/data\/avatars\/B0298C36-9751-48EF-BE15-80FB9CD11143-500w.jpeg"
-                },
-                {
-                    "name": "Sasha Ho",
-                    "email": "sasha.ho@gmail.com",
-                    "position": "Administrative Assistant",
-                    "photo": "https:\/\/tinyfac.es\/data\/avatars\/B0298C36-9751-48EF-BE15-80FB9CD11143-500w.jpeg"
-                },
-                {
-                    "name": "Abdullah Hadley",
-                    "email": "abdullah.hadley@gmail.com",
-                    "position": "Marketing",
-                    "photo": "https:\/\/tinyfac.es\/data\/avatars\/B0298C36-9751-48EF-BE15-80FB9CD11143-500w.jpeg"
-                },
-                {
-                    "name": "Thomas Stock",
-                    "email": "thomas.stock@gmail.com",
-                    "position": "Product Designer",
-                    "photo": "https:\/\/tinyfac.es\/data\/avatars\/B0298C36-9751-48EF-BE15-80FB9CD11143-500w.jpeg"
-                },
-                {
-                    "name": "Veeti Seppanen",
-                    "email": "veeti.seppanen@gmail.com",
-                    "position": "Product Designer",
-                    "photo": "https:\/\/tinyfac.es\/data\/avatars\/B0298C36-9751-48EF-BE15-80FB9CD11143-500w.jpeg"
-                },
-                {
-                    "name": "Bonnie Riley",
-                    "email": "bonnie.riley@gmail.com",
-                    "position": "Marketing",
-                    "photo": "https:\/\/tinyfac.es\/data\/avatars\/B0298C36-9751-48EF-BE15-80FB9CD11143-500w.jpeg"
-                }
-            ]
+            baseUrl: 'https://digimonk.co/fitness/api/Api/videoList',
         };
     }
 
@@ -134,53 +74,54 @@ class DashboardActivity extends Component {
     };
 
     componentDidMount() {
-        //  this.videoList();
-
+        this.showLoading();
+        this.videoList();
     }
 
-    // videoList() {
+    ListEmpty = () => {
+        return (
 
-    //     var url = this.state.baseUrl;
-    //     console.log('url:' + url);
-    //     fetch(url, {
-    //       method: 'GET',
-    //       headers: {
-    //         'Content-Type': 'application/json',
-    //       },
-    //     //   body: JSON.stringify({
-    //     //     secure_pin: 'digimonk',
-    //     //     customer_id: this.state.userId
-    //     //   }),
-    //     })
-    //       .then(response => response.json())
-    //       .then(responseData => {
-    //         this.hideLoading();
-    //         if (responseData.status == '0') {
-    //           alert(responseData.message);
-    //         } else {
-    //           this.setState({ data: responseData.data});
-    //         }
+            <View style={styles.container}>
+                {
+                    this.state.isnoDataVisible ?
+                        <Text style={{ textAlign: 'center' }}>{stringsoflanguages.no_videos_found}</Text>
+                        : null
+                }
+            </View>
 
-    //         console.log('response object:', responseData);
-    //       })
-    //       .catch(error => {
-    //         this.hideLoading();
-    //         console.error(error);
-    //       })
+        );
+    };
 
-    //       .done();
-    //   }
 
-    actionOnRow(item) {
+    videoList() {
 
-        // this.props.navigation.navigate('QuestionLogDetail', {
-        //   item: item,
-        //   question_id: item.question_id
-        // })
+        var url = this.state.baseUrl;
+        console.log('url:' + url);
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(response => response.json())
+            .then(responseData => {
+                this.hideLoading();
+                if (responseData.status == '0') {
+                    alert(responseData.message);
+                } else {
+                    this.setState({ data: responseData.data });
+                }
 
-        // console.log('Selected Item :', item);
+                console.log('response object:', responseData);
+            })
+            .catch(error => {
+                this.hideLoading();
+                console.error(error);
+            })
 
+            .done();
     }
+
 
     render() {
         return (
@@ -189,55 +130,122 @@ class DashboardActivity extends Component {
                 <View style={styles.headerView}>
 
 
-                    <TouchableOpacity style={{ flex: .10, alignItems: 'center', justifyContent: 'center' }}
+                    <TouchableOpacity style={{
+                        flex: .10
+                       
+                    }}
+                    onPress={() => this.props.navigation.navigate('DashboardDetail')}
                     >
 
-                        {/* <Image source={require('../images/home_menu.png')}
-style={styles.MenuHomeIconStyle} /> */}
+                        <Image source={require('../images/small-logo.png')}
+                            style={styles.MenuHomeIconStyle} />
 
                     </TouchableOpacity>
 
 
-                    <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}
+                    <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center', flex: .80 }}
                     >
 
                         <Text style={styles.screentitle}>MENEZES PILATES</Text>
 
                     </TouchableOpacity>
 
+
+                    <TouchableOpacity style={{
+                        flex: .10
+                    }}
+                    >
+
+                        <Image source={require('../images/small-user.png')}
+                            style={styles.MenuHomeUserIconStyle} />
+
+
+                    </TouchableOpacity>
+
+
                 </View>
 
+                <View style={{ height: 70, justifyContent: 'center', alignItems: 'center', alignSelf: 'center' }} >
+                    <ScrollView
+                        showsHorizontalScrollIndicator={false}
+                        horizontal>
+                        <View style={{ flex: 1, flexDirection: 'row' }}>
+                            <View style={styles.smallcircleshapeview} >
+                                <Text style={styles.smallcircletext} >1</Text>
 
-                {/* 
-                <ScrollView
-                    refreshControl={
-                        <RefreshControl 
-                            refreshing={this.state.refresh}
-                            onRefresh={() => this.onRefresh()}
-                            tintColor='#FFC33B'
-                        />
-                    }> */}
+                            </View>
+                            <View style={styles.smallcircleshapeview} >
+                                <Text style={styles.smallcircletext} >2</Text>
+
+                            </View>
+
+                            <View style={styles.smallcircleshapeview} >
+                                <Text style={styles.smallcircletext} >3</Text>
+
+                            </View>
+
+                            <View style={styles.smallcircleshapeview} >
+                                <Text style={styles.smallcircletext} >4</Text>
+
+                            </View>
+
+                            <View style={styles.smallcircleshapeview} >
+                                <Text style={styles.smallcircletext} >5</Text>
+
+                            </View>
+                            <View style={styles.smallcircleshapeview} >
+                                <Text style={styles.smallcircletext} >6</Text>
+
+                            </View>
+                            <View style={styles.smallcircleshapeview} >
+                                <Text style={styles.smallcircletext} >7</Text>
+
+                            </View>
+                            <View style={styles.smallcircleshapeview} >
+                                <Text style={styles.smallcircletext} >8</Text>
+
+                            </View>
+                            <View style={styles.smallcircleshapeview} >
+                                <Text style={styles.smallcircletext} >9</Text>
+
+                            </View>
+                            <View style={styles.smallcircleshapeview} >
+                                <Text style={styles.smallcircletext} >10</Text>
+
+                            </View>
+                            <View style={styles.smallcircleshapeview} >
+                                <Text style={styles.smallcircletext} >11</Text>
+
+                            </View>
+
+
+                        </View>
+
+                    </ScrollView>
+                </View>
+
 
                 <FlatList
                     style={{ flex: 1 }}
                     data={this.state.data}
 
-                    renderItem={({ item }) => (
+                    renderItem={({ item, index }) => (
 
-                        <TouchableWithoutFeedback onPress={() => this.actionOnRow(item)}>
+                        <TouchableWithoutFeedback>
 
                             <View>
-                                <Item item={item} />
+                                <Item item={item}
+                                />
                             </View>
 
                         </TouchableWithoutFeedback>
 
                     )}
-                    keyExtractor={item => item.email}
+                    keyExtractor={item => item.id}
                     ListEmptyComponent={this.ListEmpty}
                 />
 
-                {/* </ScrollView> */}
+
 
                 <View style={styles.tabStyle}>
 
@@ -303,10 +311,6 @@ style={styles.MenuHomeIconStyle} /> */}
 
 
                     </TouchableOpacity>
-
-
-
-
 
 
                 </View>
@@ -499,9 +503,46 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    MenuHomeIconStyle: {
+        marginTop: 10
+    },
+    MenuHomeUserIconStyle: {
+        height: 30,
+        width: 25,
+        margin: 5,
+        alignSelf: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    smallcircleshapeview: {
+        width: 50,
+        height: 50,
+        margin: 10,
+        borderRadius: 30,
+        backgroundColor: 'white',
+        shadowColor: '#ecf6fb',
+        elevation: 20,
+        color: 'black',
+        textAlign: 'center',
+        shadowColor: 'grey',
+        shadowOpacity: 1,
+        alignItems: 'center'
 
 
+    },
 
+    smallcircletext: {
+        shadowColor: '#ecf6fb',
+        elevation: 20,
+        margin: 15,
+        color: 'black',
+        textAlign: 'center',
+        shadowColor: 'grey',
+        shadowOpacity: 1,
+        alignItems: 'center'
+
+
+    },
 
 });
 

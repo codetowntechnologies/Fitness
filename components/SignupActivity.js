@@ -7,23 +7,26 @@ import {
     TouchableOpacity,
     Image,
     ScrollView,
-    SafeAreaView
+    SafeAreaView,
+    ActivityIndicator
 } from 'react-native';
 import CheckBox from 'react-native-check-box'
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 import stringsoflanguages from './locales/stringsoflanguages';
+import AsyncStorage from '@react-native-community/async-storage';
 
 class SignupActivity extends Component {
 
     constructor(props) {
         super(props);
-        this.signupcall = this.signupcall.bind(this);
+       // this.signupcall = this.signupcall.bind(this);
         this.state = {
-            baseUrl: 'https://digimonk.co/fitness/api/Api/register',
+       //     baseUrl: 'https://digimonk.co/fitness/api/Api/register',
             name: '',
             email: '',
             phone: '',
             password: '',
+            confirmPassword: '',
             gender: '',
             location: '',
             device_token: ''
@@ -49,88 +52,96 @@ class SignupActivity extends Component {
 
     }
 
-    CheckTextInput = () => {
-        //Handler for the Submit onPress
-        if (this.state.name != '') {
-            //Check for the Name TextInput
-            if (this.state.email != '') {
-                //Check for the Name TextInput
-                if (this.state.phone != '') {
-                    //check for phone number
-                    if (this.state.password != '') {
-                        //Check for the Email TextInput
-                        if (this.state.password == this.state.confirmpassword) {
+    // CheckTextInput = () => {
+    //     //Handler for the Submit onPress
+    //     if (this.state.name != '') {
+    //         //Check for the Name TextInput
+    //         if (this.state.email != '') {
+    //             //Check for the Name TextInput
+    //             if (this.state.phone != '') {
+    //                 //check for phone number
+    //                 if (this.state.gender != '') {
+    //                     //check for phone number
+    //                     if (this.state.location != '') {
+    //                         //check for phone number
+    //                         if (this.state.password != '') {
+    //                             //Check for the password TextInput
+    //                             console.log('password====' + this.state.password);
+    //                             console.log('confirm password ====' + this.state.confirmPassword);
+    //                             if (this.state.password == this.state.confirmPassword) {
+    //                                 //Check for the password and confirm password
+    //                                 if (this.state.isChecked) {
 
-                            if (this.state.isChecked) {
+    //                                     this.showLoading();
 
-                                this.showLoading();
-                                if (Platform.OS === 'ios') {
-                                    deviceType = 'ios'
-                                } else {
-                                    deviceType = 'android'
-                                }
-                                this.signupCall();
+    //                                     //  this.signupCall();
 
-                            } else {
-                                alert(stringsoflanguages.please_accept_terms);
-                            }
+    //                                 } else {
+    //                                     alert(stringsoflanguages.please_accept_terms);
+    //                                 }
 
-                        } else {
-                            alert(stringsoflanguages.password_confirm_password_not_match);
-                        }
-                    } else {
-                        alert(stringsoflanguages.please_enter_password);
-                    }
-                } else {
-                    alert(stringsoflanguages.please_enter_phone_number);
-                }
-            } else {
-                alert(stringsoflanguages.please_enter_email);
-            }
-        } else {
-            alert(stringsoflanguages.please_enter_name);
-        }
-    };
-
-
-
-
-    signupcall() {
-
-        var url = this.state.baseUrl;
-        console.log('url:' + url);
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                secure_pin: 'digimonk',
-                email_id: this.state.email,
-                password: this.state.password,
-                device_type: deviceType,
-                device_token: this.state.deviceToken
-            }),
-        })
-            .then(response => response.json())
-            .then(responseData => {
-                this.hideLoading();
-                if (responseData.status == '0') {
-                    alert(responseData.message);
-                } else {
-                    this.saveLoginUserData(responseData);
-                }
+    //                             } else {
+    //                                 alert(stringsoflanguages.password_confirm_password_not_match);
+    //                             }
+    //                         } else {
+    //                             alert(stringsoflanguages.please_enter_password);
+    //                         }
+    //                     } else {
+    //                         alert(stringsoflanguages.please_enter_location);
+    //                     }
+    //                 } else {
+    //                     alert(stringsoflanguages.please_enter_gender);
+    //                 }
+    //             } else {
+    //                 alert(stringsoflanguages.please_enter_phone_number);
+    //             }
+    //         } else {
+    //             alert(stringsoflanguages.please_enter_email);
+    //         }
+    //     } else {
+    //         alert(stringsoflanguages.please_enter_name);
+    //     }
+    // };
 
 
-                console.log('response object:', responseData);
-            })
-            .catch(error => {
-                this.hideLoading();
-                console.error(error);
-            })
 
-            .done();
-    }
+
+    // signupcall() {
+
+    //     var url = this.state.baseUrl;
+    //     console.log('url:' + url);
+    //     fetch(url, {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //         },
+    //         body: JSON.stringify({
+    //             secure_pin: 'digimonk',
+    //             email_id: this.state.email,
+    //             password: this.state.password,
+    //             device_type: deviceType,
+    //             device_token: this.state.deviceToken
+    //         }),
+    //     })
+    //         .then(response => response.json())
+    //         .then(responseData => {
+    //             this.hideLoading();
+    //             if (responseData.status == '0') {
+    //                 alert(responseData.message);
+    //             } else {
+    //                 this.saveLoginUserData(responseData);
+    //             }
+
+
+    //             console.log('response object:', responseData);
+    //         })
+    //         .catch(error => {
+    //             this.hideLoading();
+    //             console.error(error);
+    //         })
+
+    //         .done();
+    // }
 
 
 
@@ -152,8 +163,8 @@ class SignupActivity extends Component {
 
                             <View style={{ flexDirection: 'row' }}>
 
-                                <TouchableOpacity style={{ flex: .20 }}
-                                    onPress={() => {this.props.navigation.navigate('Login')}}>
+                                <TouchableOpacity style={{ flex: .20, marginTop:30 }}
+                                    onPress={() => { this.props.navigation.navigate('Login') }}>
 
                                     <Image source={require('../images/back_icon.png')}
                                         style={styles.backIconStyle} />
@@ -204,6 +215,12 @@ class SignupActivity extends Component {
 
                             </View>
 
+                            {this.state.loading && (
+                                <View style={styles.loading}>
+                                    <ActivityIndicator size="large" color="#ffffff" />
+                                </View>
+                            )}
+
 
                             <View
                                 style={styles.inputView1}>
@@ -229,11 +246,28 @@ class SignupActivity extends Component {
                                 <Image source={require('../images/phone_no.png')}
                                     style={styles.ImageIconStyle} />
 
+                                <View style={{ flexDirection: 'row' }}>
+
+                                    <TextInput
+                                        placeholder="+61"
+                                        placeholderTextColor="#C3C8D1"
+                                        underlineColorAndroid="transparent"
+                                        keyboardType='number-pad'
+                                        underlineColorAndroid="#ADB6C1"
+                                        editable={false}
+
+                                    />
+
+                                    <Image source={require('../images/down-arrow.png')}
+                                        style={styles.arrowIconStyle} />
+
+                                </View>
+
                                 <TextInput
                                     placeholder="Phone Number"
                                     placeholderTextColor="#C3C8D1"
                                     underlineColorAndroid="transparent"
-                                    style={styles.input}
+                                    style={styles.inputphonenumber}
                                     keyboardType='number-pad'
                                     onChangeText={phone => this.setState({ phone })}
                                 />
@@ -262,7 +296,7 @@ class SignupActivity extends Component {
                                 style={styles.inputView1}>
 
                                 <Image source={require('../images/location_red.png')}
-                                    style={styles.ImageIconStyle} />
+                                    style={styles.locationIconStyle} />
 
                                 <TextInput
                                     placeholder="Location"
@@ -347,14 +381,16 @@ class SignupActivity extends Component {
                             <TouchableOpacity
                                 style={styles.loginButtonStyle}
                                 activeOpacity={.5}
-                                onPress={this.CheckTextInput}>
+                              //  onPress={this.CheckTextInput}>
+                              onPress={() => this.props.navigation.navigate('OTP')}>
 
 
                                 <Text style={styles.buttonWhiteTextStyle}>Sign Up</Text>
 
                             </TouchableOpacity>
 
-                            <Text style={styles.forgotpasswordtext} onPress={() => this.props.navigation.navigate('Forgot Password')}>Forgot Password?</Text>
+                          
+                            <Text style={styles.forgotpasswordtext} onPress={() => this.props.navigation.navigate('ForgotPassword')}>Forgot Password?</Text>
 
 
                             <View style={{ flexDirection: 'column', alignItems: 'center' }}>
@@ -489,6 +525,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    locationIconStyle: {
+        height: 34,
+        width: 25,
+        alignSelf: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
     MailIconStyle: {
         height: 25,
         width: 30,
@@ -517,7 +560,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     backIconStyle: {
-
         height: 25,
         width: 50,
         tintColor: 'white',
@@ -529,6 +571,21 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    arrowIconStyle: {
+        height: 15,
+        width: 15,
+        alignSelf: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    inputphonenumber: {
+        color: 'black',
+        width: 250,
+        height: 50,
+        padding: 10,
+        textAlign: 'left',
+        backgroundColor: 'transparent'
     },
 
 });

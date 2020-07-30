@@ -6,20 +6,24 @@ import {
     TouchableOpacity,
     Image,
     TextInput,
-    SafeAreaView
+    SafeAreaView,
+    ActivityIndicator
 } from 'react-native';
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 import stringsoflanguages from '../components/locales/stringsoflanguages';
+import AsyncStorage from '@react-native-community/async-storage';
 
 
 class SettingsActivity extends Component {
 
     constructor(props) {
         super(props);
+        this.logoutcall = this.logoutcall.bind(this);
         this.state = {
+            logouturl: 'https://digimonk.co/fitness/api/Api/logout',
+            userId: '',
         };
     }
-
 
     showLoading() {
         this.setState({ loading: true });
@@ -30,13 +34,69 @@ class SettingsActivity extends Component {
     }
 
     static navigationOptions = {
-        title: 'Dashboard'
+        title: 'Settings'
     };
 
     componentDidMount() {
 
+        AsyncStorage.getItem('@user_id').then((userId) => {
+            if (userId) {
+                this.setState({ userId: userId });
+                console.log("user id ====" + this.state.userId);
+            
+            }
+        });
+
+
     }
 
+
+
+    logout = () => {
+
+        this.showLoading();
+        this.logoutcall();
+
+    };
+
+
+    logoutcall() {
+
+        var url = this.state.logouturl;
+        console.log('logouturl:' + url);
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                id: this.state.userId
+            }),
+        })
+            .then(response => response.json())
+            .then(responseData => {
+                this.hideLoading();
+                if (responseData.status == '0') {
+                    alert(responseData.message);
+                } else {
+                    AsyncStorage.setItem('@is_login', "");
+                    AsyncStorage.setItem('@user_id', "");
+                    AsyncStorage.setItem('@email', "");
+                    AsyncStorage.setItem('@name', "");
+                    this.props.navigation.navigate('Login')
+
+
+
+                }
+                console.log(responseData);
+            })
+            .catch(error => {
+                this.hideLoading();
+                console.error(error);
+            })
+
+            .done();
+    }
 
 
     render() {
@@ -74,7 +134,7 @@ class SettingsActivity extends Component {
 
                     <View style={{
                         flexDirection: 'column', alignItems: 'center', backgroundColor: '#ffffff',
-                        flex: .7, width: '100%'
+                        flex: .84, width: '100%'
                     }}>
 
 
@@ -99,7 +159,8 @@ class SettingsActivity extends Component {
                             </View>
 
 
-                            <View style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}>
+                            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}
+                                onPress={() => { this.props.navigation.navigate('MySubscriptionVideos') }}>
 
                                 <Image source={require('../images/my_subscription.png')}
                                     style={styles.StyleSubscribedVideo} />
@@ -111,10 +172,11 @@ class SettingsActivity extends Component {
 
                                 </View>
 
-                            </View>
+                            </TouchableOpacity>
 
 
-                            <View style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}>
+                            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}
+                                onPress={() => { this.props.navigation.navigate('MyVideos') }}>
 
                                 <Image source={require('../images/video_setting.png')}
                                     style={styles.StyleVideoTab} />
@@ -123,11 +185,11 @@ class SettingsActivity extends Component {
                                 <View style={styles.second_half_view}>
                                     <Text style={styles.subscribe_level_text}>{stringsoflanguages.subscribed_videos}</Text>
                                 </View>
-                            </View>
+                            </TouchableOpacity>
 
 
 
-                            <View style={{ flexDirection: 'row', alignItems: 'center', padding: 10, marginTop:5 }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', padding: 10, marginTop: 5 }}>
 
                                 <Image source={require('../images/change_password.png')}
                                     style={styles.StyleChangePassword} />
@@ -141,7 +203,7 @@ class SettingsActivity extends Component {
 
 
                             <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}
-                             onPress={() => { this.props.navigation.navigate('Notification') }}>
+                                onPress={() => { this.props.navigation.navigate('Notification') }}>
 
                                 <Image source={require('../images/notification.png')}
                                     style={styles.StyleNotificationIcon} />
@@ -154,7 +216,7 @@ class SettingsActivity extends Component {
 
 
                             <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}
-                             onPress={() => this.props.navigation.navigate('WhoWeAre') }>
+                                onPress={() => this.props.navigation.navigate('WhoWeAre')}>
 
                                 <Image source={require('../images/who_we_are.png')}
                                     style={styles.StyleMenuIcon} />
@@ -168,7 +230,8 @@ class SettingsActivity extends Component {
 
                             <TouchableOpacity
                                 style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}
-                                onPress={() => this.props.navigation.navigate('Login')}>
+                                onPress={this.logout}>
+                                {/* //   onPress={() => this.props.navigation.navigate('Login')}> */}
 
                                 <Image source={require('../images/logout_icon.png')}
                                     style={styles.StyleMenuIcon} />
@@ -186,7 +249,7 @@ class SettingsActivity extends Component {
 
                         <View style={{
                             flexDirection: 'column', alignItems: 'center', backgroundColor: '#ffffff',
-                            flex: .14, width: '100%'
+                            flex: .16, width: '100%'
                         }}>
 
 
@@ -203,6 +266,7 @@ class SettingsActivity extends Component {
                                 </TouchableOpacity>
 
                                 <TouchableOpacity style={styles.tabButtonStyle}
+
                                     onPress={() => { this.props.navigation.navigate('MyVideos') }}>
 
                                     <Image source={require('../images/video_inactive.png')}
@@ -232,7 +296,7 @@ class SettingsActivity extends Component {
 
 
                                 <TouchableOpacity style={styles.tabButtonStyle}
-                                 onPress={() => { this.props.navigation.navigate('Notification') }}>
+                                    onPress={() => { this.props.navigation.navigate('Notification') }}>
 
                                     <Image source={require('../images/bell_inactive.png')}
                                         style={styles.styleNotificationTab} />
@@ -254,7 +318,11 @@ class SettingsActivity extends Component {
                                 </TouchableOpacity>
 
 
-
+                                {this.state.loading && (
+                        <View style={styles.loading}>
+                            <ActivityIndicator size="large" color="#ffffff" />
+                        </View>
+                    )}
 
 
 
@@ -310,7 +378,7 @@ const styles = StyleSheet.create({
     },
     labeltextstyle: {
         color: '#4D4D4D',
-        marginLeft:21,
+        marginLeft: 21,
         fontSize: RFPercentage(2),
         textAlign: 'left'
     },
@@ -318,7 +386,7 @@ const styles = StyleSheet.create({
     subscribe_level_text: {
         color: '#4D4D4D',
         marginLeft: 10,
-        marginTop:10,
+        marginTop: 10,
         fontSize: RFPercentage(2),
         textAlign: 'left'
     },
