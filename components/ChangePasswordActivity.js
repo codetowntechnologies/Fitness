@@ -12,15 +12,17 @@ import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 import stringsoflanguages from './locales/stringsoflanguages';
 import AsyncStorage from '@react-native-community/async-storage';
 
-class ForgotPasswordActivity extends Component {
+class ChangePasswordActivity extends Component {
 
     constructor(props) {
         super(props);
-        this.forgotCall = this.forgotCall.bind(this);
+        this.logincall = this.logincall.bind(this);
         this.state = {
-            baseUrl: 'https://digimonk.co/fitness/api/Api/forgot_password',
-            phonenumber: '',
+            baseUrl: 'https://digimonk.co/fitness/api/Api/changePassword',
+            confirmpassword: '',
             password: '',
+            currentpassword: '',
+            userId: '',
         };
     }
 
@@ -34,28 +36,55 @@ class ForgotPasswordActivity extends Component {
     }
 
     static navigationOptions = {
-        title: 'Forgot Password'
+        title: 'login'
     };
 
 
     componentDidMount() {
 
+        AsyncStorage.getItem('@user_id').then((userId) => {
+            if (userId) {
+                this.setState({ userId: userId });
+                console.log("user id ====" + this.state.userId);
+
+            }
+        });
+
+
     }
 
 
     CheckTextInput = () => {
-        if (this.state.phonenumber != '') {
-            //     //Check for the phone number
-            this.showLoading();
-            this.forgotCall();
+        //Handler for the Submit onPress
+        if (this.state.currentpassword != '') {
+            //Check for the Name TextInput
+            if (this.state.password != '') {
+                //Check for the Name TextInput
+                if (this.state.password == this.state.confirmpassword) {
+                    //Check for the Email TextInput
 
+                    console.log("id==" + this.state.userId)
+                    console.log("current ==" + this.state.currentpassword)
+                    console.log("confirmpassword ==" + this.state.confirmpassword)
+
+
+
+                    this.showLoading();
+                    this.logincall();
+
+                } else {
+                    alert(stringsoflanguages.new_password_confirm_password_not_match);
+                }
+            } else {
+                alert(stringsoflanguages.please_enter_new_password);
+            }
         } else {
-            alert(stringsoflanguages.please_enter_phone_number);
+            alert(stringsoflanguages.please_enter_current_password);
         }
     };
 
 
-    forgotCall() {
+    logincall() {
 
         var url = this.state.baseUrl;
         console.log('url:' + url);
@@ -65,7 +94,10 @@ class ForgotPasswordActivity extends Component {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                phone: this.state.phonenumber,
+                id: this.state.userId,
+                current_password: this.state.currentpassword,
+                new_password: this.state.password,
+                confirm_password: this.state.confirmpassword,
             }),
         })
             .then(response => response.json())
@@ -75,12 +107,7 @@ class ForgotPasswordActivity extends Component {
                     alert(responseData.message);
                 } else {
 
-                    AsyncStorage.setItem('@user_id', responseData.data.id.toString());
-                    
-                    this.props.navigation.navigate('ForgetOtp', {
-                        otpcode: responseData.data.otpcode,
-                        phonenumber: this.state.phonenumber
-                    })
+                    alert(responseData.message);
                 }
                 console.log(responseData);
             })
@@ -134,7 +161,6 @@ class ForgotPasswordActivity extends Component {
                     </View>
 
                 </View>
-
                 <View style={{
                     flexDirection: 'column', alignItems: 'center', backgroundColor: '#ffffff',
                     flex: .6, width: '100%', borderTopRightRadius: 30, borderTopLeftRadius: 30
@@ -146,45 +172,61 @@ class ForgotPasswordActivity extends Component {
                         </View>
                     )}
 
-                    <Text style={styles.title}>Forgot Password</Text>
+                    <Text style={styles.title}>Chnage Password</Text>
+
 
                     <View
                         style={styles.inputView}>
 
-                        <Image source={require('../images/phone_no.png')}
-                            style={styles.ImageIconStyle} />
-
-
-                        <View style={{ flexDirection: 'row' }}>
-
-                            <TextInput
-                                placeholder="+61"
-                                placeholderTextColor="#C3C8D1"
-                                underlineColorAndroid="transparent"
-                                keyboardType='number-pad'
-                                underlineColorAndroid="#ADB6C1"
-                                editable={false}
-
-                            />
-
-                            <Image source={require('../images/down-arrow.png')}
-                                style={styles.arrowIconStyle} />
-
-                        </View>
+                        <Image source={require('../images/lock.png')}
+                            style={styles.ImageLockIconStyle} />
 
                         <TextInput
-                            placeholder="Phone Number"
+                            placeholder="Current Password"
                             placeholderTextColor="#C3C8D1"
                             underlineColorAndroid="transparent"
-                            style={styles.inputphonenumber}
-                            keyboardType='number-pad'
-                            onChangeText={phonenumber => this.setState({ phonenumber })}
-                        />
+                            style={styles.input}
 
+                            onChangeText={currentpassword => this.setState({ currentpassword })}
+                        />
 
                     </View>
 
 
+                    <View
+                        style={styles.inputView1}>
+
+                        <Image source={require('../images/lock.png')}
+                            style={styles.ImageLockIconStyle} />
+
+                        <TextInput
+                            placeholder="New Password"
+                            placeholderTextColor="#C3C8D1"
+                            underlineColorAndroid="transparent"
+                            style={styles.input}
+
+                            onChangeText={password => this.setState({ password })}
+                        />
+
+                    </View>
+
+
+                    <View
+                        style={styles.inputView1}>
+
+                        <Image source={require('../images/lock.png')}
+                            style={styles.ImageLockIconStyle} />
+
+                        <TextInput
+                            placeholder="Confirm Password"
+                            placeholderTextColor="#C3C8D1"
+                            underlineColorAndroid="transparent"
+                            style={styles.input}
+
+                            onChangeText={confirmpassword => this.setState({ confirmpassword })}
+                        />
+
+                    </View>
 
 
                     <TouchableOpacity
@@ -193,13 +235,9 @@ class ForgotPasswordActivity extends Component {
                         onPress={this.CheckTextInput}>
 
 
-
-                        <Text style={styles.buttonWhiteTextStyle}>Submit</Text>
-
-
+                        <Text style={styles.buttonWhiteTextStyle}>Chnage Password</Text>
 
                     </TouchableOpacity>
-
 
 
                 </View>
@@ -295,8 +333,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: 'white',
-        width: '90%',   
-        marginTop: 80,
+        width: '90%',
+        marginTop: 100,
         borderRadius: 10,
         elevation: 20,
         shadowColor: 'grey',
@@ -350,6 +388,13 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontWeight: 'bold'
     },
+    title: {
+        color: '#3F434E',
+        fontSize: 20,
+        marginTop: 20,
+        textAlign: 'center',
+        fontWeight: 'bold'
+    },
     backIconStyle: {
         marginTop: 3,
         height: 25,
@@ -360,13 +405,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    title: {
-        color: '#3F434E',
-        fontSize: 20,
-        marginTop: 20,
-        textAlign: 'center',
-        fontWeight: 'bold'
-    }
 });
 
-export default ForgotPasswordActivity;
+export default ChangePasswordActivity;

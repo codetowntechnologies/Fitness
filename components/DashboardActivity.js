@@ -18,8 +18,7 @@ import stringsoflanguages from '../components/locales/stringsoflanguages';
 function Item({ item }) {
     return (
         <View style={styles.listItem}>
-
-            <ImageBackground source={{ uri: 'https://img-a.udemycdn.com/course/750x422/8075_b2b5_10.jpg' }}
+            <ImageBackground source={{ uri: 'https://digimonk.co/fitness/uploads/video_logo/' + item.image }}
                 style={{ width: 400, height: 300, justifyContent: 'center' }}
                 imageStyle={{ borderTopLeftRadius: 20, borderTopRightRadius: 20 }}>
                 <Image source={require('../images/play_icon.png')}
@@ -31,7 +30,7 @@ function Item({ item }) {
 
                 <View style={{ flexDirection: 'row', flex: .60 }}>
 
-                    <Text style={styles.textpinktextstyle}>{item.id} .</Text>
+                    <Text style={styles.textpinktextstyle}>{item.sr_nu}.</Text>
 
                     <Text style={styles.textblacktextstyle}>{item.name}</Text>
                 </View>
@@ -122,6 +121,13 @@ class DashboardActivity extends Component {
             .done();
     }
 
+    actionOnRow(item) {
+
+        this.props.navigation.navigate('DashboardDetail', {
+          id: item.id
+        })
+
+    }
 
     render() {
         return (
@@ -132,10 +138,7 @@ class DashboardActivity extends Component {
 
                     <TouchableOpacity style={{
                         flex: .10
-                       
-                    }}
-                    onPress={() => this.props.navigation.navigate('DashboardDetail')}
-                    >
+                    }}>
 
                         <Image source={require('../images/small-logo.png')}
                             style={styles.MenuHomeIconStyle} />
@@ -231,7 +234,7 @@ class DashboardActivity extends Component {
 
                     renderItem={({ item, index }) => (
 
-                        <TouchableWithoutFeedback>
+                        <TouchableWithoutFeedback onPress={() => this.actionOnRow(item)}>
 
                             <View>
                                 <Item item={item}

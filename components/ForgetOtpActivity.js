@@ -5,22 +5,26 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    Image,
-    ActivityIndicator,
+    Image
 } from 'react-native';
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
-import stringsoflanguages from './locales/stringsoflanguages';
+import OTPInputView from '@twotalltotems/react-native-otp-input'
+import stringsoflanguages from '../components/locales/stringsoflanguages';
 import AsyncStorage from '@react-native-community/async-storage';
 
-class ForgotPasswordActivity extends Component {
+var otpcode, phonenumber;
+
+class ForgetOtpActivity extends Component {
 
     constructor(props) {
         super(props);
-        this.forgotCall = this.forgotCall.bind(this);
+        this.resendotp = this.resendotp.bind(this);
+        this.verifyotp = this.verifyotp.bind(this);
         this.state = {
-            baseUrl: 'https://digimonk.co/fitness/api/Api/forgot_password',
-            phonenumber: '',
-            password: '',
+            otpUrl: 'https://digimonk.co/fitness/api/Api/forgot_password',
+            verifyOtpUrl: 'https://digimonk.co/fitness/api/Api/verify',
+            otpcode: '',
+            userId: ''
         };
     }
 
@@ -34,30 +38,33 @@ class ForgotPasswordActivity extends Component {
     }
 
     static navigationOptions = {
-        title: 'Forgot Password'
+        title: 'OTP Activity'
     };
 
 
     componentDidMount() {
 
+        const { navigation } = this.props;
+        otpcode = navigation.getParam('otpcode', 'no-otp');
+        phonenumber = navigation.getParam('phonenumber', 'no-otp');
+
+        AsyncStorage.getItem('@user_id').then((userId) => {
+            if (userId) {
+                this.setState({ userId: userId });
+                console.log("user id ====" + this.state.userId);
+              
+            }
+        });
+
+        console.log("otp code===" + otpcode)
+        console.log("phonenumber ===" + phonenumber)
+
+
     }
 
+    resendotp() {
 
-    CheckTextInput = () => {
-        if (this.state.phonenumber != '') {
-            //     //Check for the phone number
-            this.showLoading();
-            this.forgotCall();
-
-        } else {
-            alert(stringsoflanguages.please_enter_phone_number);
-        }
-    };
-
-
-    forgotCall() {
-
-        var url = this.state.baseUrl;
+        var url = this.state.otpUrl;
         console.log('url:' + url);
         fetch(url, {
             method: 'POST',
@@ -65,7 +72,7 @@ class ForgotPasswordActivity extends Component {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                phone: this.state.phonenumber,
+                phone: phonenumber
             }),
         })
             .then(response => response.json())
@@ -74,13 +81,43 @@ class ForgotPasswordActivity extends Component {
                 if (responseData.status == '0') {
                     alert(responseData.message);
                 } else {
+                    otpcode = responseData.data.otpcode;
 
-                    AsyncStorage.setItem('@user_id', responseData.data.id.toString());
-                    
-                    this.props.navigation.navigate('ForgetOtp', {
-                        otpcode: responseData.data.otpcode,
-                        phonenumber: this.state.phonenumber
-                    })
+                    alert(responseData.message);
+                }
+                console.log(responseData);
+            })
+            .catch(error => {
+                this.hideLoading();
+                console.error(error);
+            })
+
+            .done();
+    }
+
+
+
+    verifyotp() {
+
+        var url = this.state.verifyOtpUrl;
+        console.log('url:' + url);
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                otpcode: this.state.otpcode,
+                id : this.state.userId
+            }),
+        })
+            .then(response => response.json())
+            .then(responseData => {
+                this.hideLoading();
+                if (responseData.status == '0') {
+                    alert(responseData.message);
+                } else {
+                    this.props.navigation.navigate('ResetPassword')
                 }
                 console.log(responseData);
             })
@@ -95,6 +132,7 @@ class ForgotPasswordActivity extends Component {
 
 
 
+
     render() {
         return (
             <View style={styles.container}>
@@ -103,7 +141,6 @@ class ForgotPasswordActivity extends Component {
                 <View style={{
                     flexDirection: 'column', alignItems: 'center', justifyContent: 'center', backgroundColor: '#FB4252',
                     flex: .4, width: '100%'
-
 
                 }}>
 
@@ -140,67 +177,38 @@ class ForgotPasswordActivity extends Component {
                     flex: .6, width: '100%', borderTopRightRadius: 30, borderTopLeftRadius: 30
                 }}>
 
-                    {this.state.loading && (
-                        <View style={styles.loading}>
-                            <ActivityIndicator size="large" color="#ffffff" />
-                        </View>
-                    )}
+                    <Text style={styles.title}>Verify OTP</Text>
 
-                    <Text style={styles.title}>Forgot Password</Text>
+                    <Text style={styles.title}>OTP - {otpcode}</Text>
 
-                    <View
-                        style={styles.inputView}>
+                    <OTPInputView
+                        style={{ width: '80%', height: 200 }}
+                        pinCount={4}
+                        autoFocusOnLoad
+                        codeInputFieldStyle={styles.underlineStyleBase}
+                        codeInputHighlightStyle={styles.underlineStyleHighLighted}
+                        onCodeFilled={(code => {
+                            this.setState({ otpcode: code })
+                            //  console.log(`Code is ${code}, you are good to go!`)
+                        })}
+                    />
 
-                        <Image source={require('../images/phone_no.png')}
-                            style={styles.ImageIconStyle} />
+                    <View style={{ flexDirection: 'row' }}>
 
-
-                        <View style={{ flexDirection: 'row' }}>
-
-                            <TextInput
-                                placeholder="+61"
-                                placeholderTextColor="#C3C8D1"
-                                underlineColorAndroid="transparent"
-                                keyboardType='number-pad'
-                                underlineColorAndroid="#ADB6C1"
-                                editable={false}
-
-                            />
-
-                            <Image source={require('../images/down-arrow.png')}
-                                style={styles.arrowIconStyle} />
-
-                        </View>
-
-                        <TextInput
-                            placeholder="Phone Number"
-                            placeholderTextColor="#C3C8D1"
-                            underlineColorAndroid="transparent"
-                            style={styles.inputphonenumber}
-                            keyboardType='number-pad'
-                            onChangeText={phonenumber => this.setState({ phonenumber })}
-                        />
+                        <Text style={styles.didntrectext}>{stringsoflanguages.didnt_received_code}</Text>
+                        <Text style={styles.sendagaintext} onPress={this.resendotp}>{stringsoflanguages.send_again}</Text>
 
 
                     </View>
 
-
-
-
                     <TouchableOpacity
                         style={styles.loginButtonStyle}
                         activeOpacity={.5}
-                        onPress={this.CheckTextInput}>
+                        onPress={this.verifyotp}>
 
-
-
-                        <Text style={styles.buttonWhiteTextStyle}>Submit</Text>
-
-
+                        <Text style={styles.buttonWhiteTextStyle}>Verify</Text>
 
                     </TouchableOpacity>
-
-
 
                 </View>
 
@@ -235,15 +243,7 @@ const styles = StyleSheet.create({
     },
     input: {
         color: 'black',
-        width: 300,
-        height: 50,
-        padding: 10,
-        textAlign: 'left',
-        backgroundColor: 'transparent'
-    },
-    inputphonenumber: {
-        color: 'black',
-        width: 250,
+        width: 50,
         height: 50,
         padding: 10,
         textAlign: 'left',
@@ -267,7 +267,7 @@ const styles = StyleSheet.create({
         alignContent: 'center',
     },
     forgotpasswordtext: {
-        fontSize: RFPercentage(1.8),
+        fontSize: RFPercentage(2.5),
         textAlign: 'center',
         color: '#6F737A',
         marginRight: 10,
@@ -295,8 +295,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: 'white',
-        width: '90%',   
-        marginTop: 80,
         borderRadius: 10,
         elevation: 20,
         shadowColor: 'grey',
@@ -309,8 +307,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: 'white',
-        width: '90%',
-        marginTop: 20,
         borderRadius: 10,
         elevation: 20,
         shadowColor: 'grey',
@@ -325,9 +321,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    arrowIconStyle: {
-        height: 15,
-        width: 15,
+    ImageLockIconStyle: {
+        height: 32,
+        width: 25,
         alignSelf: 'center',
         alignItems: 'center',
         justifyContent: 'center',
@@ -337,16 +333,16 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    ImageLockIconStyle: {
-        height: 32,
-        width: 25,
-        alignSelf: 'center',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
     screentitle: {
         color: "white",
         fontSize: 20,
+        textAlign: 'center',
+        fontWeight: 'bold'
+    },
+    title: {
+        color: '#3F434E',
+        fontSize: 20,
+        marginTop: 20,
         textAlign: 'center',
         fontWeight: 'bold'
     },
@@ -360,13 +356,32 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    title: {
-        color: '#3F434E',
-        fontSize: 20,
-        marginTop: 20,
+    didntrectext: {
+        fontSize: 15,
         textAlign: 'center',
-        fontWeight: 'bold'
-    }
+        color: '#6F737A',
+        alignSelf: 'center',
+        marginBottom: 10
+    },
+    sendagaintext: {
+        fontSize: 15,
+        textAlign: 'center',
+        color: '#FB4252',
+        alignSelf: 'center',
+        marginBottom: 10,
+        textDecorationLine: 'underline'
+    },
+    underlineStyleBase: {
+        width: 30,
+        height: 45,
+        borderWidth: 0,
+        color: 'black',
+        borderBottomWidth: 1,
+    },
+    underlineStyleHighLighted: {
+        borderColor: "#6F737A",
+    },
+
 });
 
-export default ForgotPasswordActivity;
+export default ForgetOtpActivity;

@@ -22,6 +22,7 @@ class SettingsActivity extends Component {
         this.state = {
             logouturl: 'https://digimonk.co/fitness/api/Api/logout',
             userId: '',
+            name:''
         };
     }
 
@@ -43,6 +44,15 @@ class SettingsActivity extends Component {
             if (userId) {
                 this.setState({ userId: userId });
                 console.log("user id ====" + this.state.userId);
+            
+            }
+        });
+
+        AsyncStorage.getItem('@name').then((name) => {
+            if (name) {
+                this.setState({ name: name });
+                
+                console.log("name ====" + this.state.name);
             
             }
         });
@@ -126,7 +136,7 @@ class SettingsActivity extends Component {
                         </TouchableOpacity>
 
 
-                        <Text style={styles.profileNameStyle}>John Smith</Text>
+                    <Text style={styles.profileNameStyle}>{this.state.name}</Text>
 
 
 
@@ -158,9 +168,10 @@ class SettingsActivity extends Component {
 
                             </View>
 
+                            {/* onPress={() => { this.props.navigation.navigate('MySubscriptionVideos') }} */}
 
                             <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}
-                                onPress={() => { this.props.navigation.navigate('MySubscriptionVideos') }}>
+                              >
 
                                 <Image source={require('../images/my_subscription.png')}
                                     style={styles.StyleSubscribedVideo} />
@@ -188,8 +199,10 @@ class SettingsActivity extends Component {
                             </TouchableOpacity>
 
 
+                            
 
-                            <View style={{ flexDirection: 'row', alignItems: 'center', padding: 10, marginTop: 5 }}>
+                            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', padding: 10, marginTop: 5 }}
+                             onPress={() => { this.props.navigation.navigate('ChangePassword') }}>
 
                                 <Image source={require('../images/change_password.png')}
                                     style={styles.StyleChangePassword} />
@@ -198,7 +211,7 @@ class SettingsActivity extends Component {
                                 <View style={styles.second_half_view}>
                                     <Text style={styles.labeltextstyle}>{stringsoflanguages.change_password}</Text>
                                 </View>
-                            </View>
+                            </TouchableOpacity>
 
 
 

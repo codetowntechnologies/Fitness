@@ -117,6 +117,14 @@ class MyVideosActivity extends Component {
             .done();
     }
 
+    actionOnRow(item) {
+
+        this.props.navigation.navigate('DashboardDetail', {
+          id: item.id
+        })
+
+    }
+
 
     render() {
         return (
@@ -161,7 +169,7 @@ class MyVideosActivity extends Component {
 
                     renderItem={({ item }) => (
 
-                        <TouchableWithoutFeedback>
+                        <TouchableWithoutFeedback onPress={() => this.actionOnRow(item)}>
 
                             <View>
                                 <Item item={item}

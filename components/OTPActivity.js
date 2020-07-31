@@ -10,14 +10,21 @@ import {
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 import OTPInputView from '@twotalltotems/react-native-otp-input'
 import stringsoflanguages from '../components/locales/stringsoflanguages';
+import AsyncStorage from '@react-native-community/async-storage';
 
+var otpcode, phonenumber;
 
 class OTPActivity extends Component {
 
     constructor(props) {
         super(props);
+        this.resendotp = this.resendotp.bind(this);
+        this.verifyotp = this.verifyotp.bind(this);
         this.state = {
-
+            otpUrl: 'https://digimonk.co/fitness/api/Api/resendOtp',
+            verifyOtpUrl: 'https://digimonk.co/fitness/api/Api/verify',
+            otpcode: '',
+            userId: ''
         };
     }
 
@@ -31,14 +38,99 @@ class OTPActivity extends Component {
     }
 
     static navigationOptions = {
-        title: 'Forgot Password'
+        title: 'OTP Activity'
     };
 
 
     componentDidMount() {
 
+        const { navigation } = this.props;
+        otpcode = navigation.getParam('otpcode', 'no-otp');
+        phonenumber = navigation.getParam('phonenumber', 'no-otp');
+
+        AsyncStorage.getItem('@user_id').then((userId) => {
+            if (userId) {
+                this.setState({ userId: userId });
+                console.log("user id ====" + this.state.userId);
+              
+            }
+        });
+
+        console.log("otp code===" + otpcode)
+        console.log("phonenumber ===" + phonenumber)
+
 
     }
+
+    resendotp() {
+
+        var url = this.state.otpUrl;
+        console.log('url:' + url);
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                id: this.state.userId
+            }),
+        })
+            .then(response => response.json())
+            .then(responseData => {
+                this.hideLoading();
+                if (responseData.status == '0') {
+                    alert(responseData.message);
+                } else {
+                    otpcode = responseData.data.otpcode;
+
+                    alert(responseData.message);
+                }
+                console.log(responseData);
+            })
+            .catch(error => {
+                this.hideLoading();
+                console.error(error);
+            })
+
+            .done();
+    }
+
+
+
+    verifyotp() {
+
+        var url = this.state.verifyOtpUrl;
+        console.log('url:' + url);
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                otpcode: this.state.otpcode,
+                id : this.state.userId
+            }),
+        })
+            .then(response => response.json())
+            .then(responseData => {
+                this.hideLoading();
+                if (responseData.status == '0') {
+                    alert(responseData.message);
+                } else {
+                    this.props.navigation.navigate('Dashboard')
+                }
+                console.log(responseData);
+            })
+            .catch(error => {
+                this.hideLoading();
+                console.error(error);
+            })
+
+            .done();
+    }
+
+
+
 
 
     render() {
@@ -87,8 +179,10 @@ class OTPActivity extends Component {
 
                     <Text style={styles.title}>Verify OTP</Text>
 
-                    {/* <OTPInputView
-                        style={{ width: '80%', height: 100}}
+                    <Text style={styles.title}>OTP - {otpcode}</Text>
+
+                    <OTPInputView
+                        style={{ width: '80%', height: 200 }}
                         pinCount={4}
                         autoFocusOnLoad
                         codeInputFieldStyle={styles.underlineStyleBase}
@@ -97,25 +191,20 @@ class OTPActivity extends Component {
                             this.setState({ otpcode: code })
                             //  console.log(`Code is ${code}, you are good to go!`)
                         })}
-                    /> */}
-
-                    {/* <OTPInputView pinCount={4} /> */}
+                    />
 
                     <View style={{ flexDirection: 'row' }}>
 
                         <Text style={styles.didntrectext}>{stringsoflanguages.didnt_received_code}</Text>
-                        <Text style={styles.sendagaintext} onPress={this.sendotp}>{stringsoflanguages.send_again}</Text>
+                        <Text style={styles.sendagaintext} onPress={this.resendotp}>{stringsoflanguages.send_again}</Text>
 
 
                     </View>
 
-                    {/* <Text style={styles.forgotpasswordtext} onPress={() => this.props.navigation.navigate('Dashboard')}>Didn't received code send again</Text> */}
-
-
                     <TouchableOpacity
                         style={styles.loginButtonStyle}
                         activeOpacity={.5}
-                        onPress={this.CheckTextInput}>
+                        onPress={this.verifyotp}>
 
                         <Text style={styles.buttonWhiteTextStyle}>Verify</Text>
 
@@ -261,6 +350,7 @@ const styles = StyleSheet.create({
         marginTop: 3,
         height: 25,
         width: 50,
+        marginLeft: 30,
         tintColor: 'white',
         alignSelf: 'center',
         alignItems: 'center',
@@ -269,18 +359,28 @@ const styles = StyleSheet.create({
     didntrectext: {
         fontSize: 15,
         textAlign: 'center',
-        color: '#F0F5FE',
+        color: '#6F737A',
         alignSelf: 'center',
         marginBottom: 10
-      },
-      sendagaintext: {
+    },
+    sendagaintext: {
         fontSize: 15,
         textAlign: 'center',
-        color: '#F0F5FE',
+        color: '#FB4252',
         alignSelf: 'center',
         marginBottom: 10,
         textDecorationLine: 'underline'
-      },
+    },
+    underlineStyleBase: {
+        width: 30,
+        height: 45,
+        borderWidth: 0,
+        color: 'black',
+        borderBottomWidth: 1,
+    },
+    underlineStyleHighLighted: {
+        borderColor: "#6F737A",
+    },
 
 });
 

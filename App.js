@@ -14,6 +14,12 @@ import WhoWeAreActivity from './components/WhoWeAreActivity';
 import MySubscriptionVideosActivity from './components/MySubscriptionVideosActivity';
 import DashboardDetailActivity from './components/DashboardDetailActivity';
 import OTPActivity from './components/OTPActivity';
+import ForgetOtpActivity from './components/ForgetOtpActivity';
+import ResetPasswordActivity from './components/ResetPasswordActivity';
+import ChangePasswordActivity from './components/ChangePasswordActivity';
+
+
+
 
 
 const NavStack = createStackNavigator(
@@ -30,7 +36,10 @@ const NavStack = createStackNavigator(
         WhoWeAre: {screen : WhoWeAreActivity},
         MySubscriptionVideos: {screen : MySubscriptionVideosActivity},
         DashboardDetail: {screen : DashboardDetailActivity},
-        OTP : {screen : OTPActivity}
+        OTP : {screen : OTPActivity},
+        ForgetOtp : {screen : ForgetOtpActivity},
+        ResetPassword : {screen : ResetPasswordActivity},
+        ChangePassword : {screen : ChangePasswordActivity},
         
     },
     {

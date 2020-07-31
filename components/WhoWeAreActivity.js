@@ -18,7 +18,12 @@ class WhoWeAreActivity extends Component {
 
     constructor(props) {
         super(props);
-
+        this.aboutus = this.aboutus.bind(this);
+        this.state = {
+            baseUrl: 'https://digimonk.co/fitness/api/Api/aboutus',
+            image: '',
+            description: ''
+        };
 
     }
 
@@ -36,9 +41,45 @@ class WhoWeAreActivity extends Component {
 
     componentDidMount() {
 
+        this.aboutus()
 
     }
 
+
+    aboutus() {
+
+        var url = this.state.baseUrl;
+        console.log('url:' + url);
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(response => response.json())
+            .then(responseData => {
+                this.hideLoading();
+                if (responseData.status == '0') {
+                    alert(responseData.message);
+                } else {
+
+                    console.log("response data ===" + responseData)
+
+                    this.setState({ image: responseData.data.image });
+                    this.setState({ description: responseData.data.description });
+
+            
+                }
+
+                console.log('response object:', responseData);
+            })
+            .catch(error => {
+                this.hideLoading();
+                console.error(error);
+            })
+
+            .done();
+    }
 
 
     render() {
@@ -71,15 +112,14 @@ class WhoWeAreActivity extends Component {
                 </View>
 
 
-                <ImageBackground source={{ uri: 'https:\/\/tinyfac.es\/data\/avatars\/B0298C36-9751-48EF-BE15-80FB9CD11143-500w.jpeg' }}
-                    style={{ height: 400, justifyContent: 'center' }}
-                >
-                    <Image source={require('../images/play_icon.png')}
-                        style={styles.playiconstyle} />
+                <ImageBackground source={{ uri: 'https://digimonk.co/fitness/uploads/video_logo/' + this.state.image }}
+                            style={{ width: 400, height: 300, justifyContent: 'center' }}>
+                            <Image source={require('../images/play_icon.png')}
+                                style={styles.playiconstyle} />
 
-                </ImageBackground>
+                        </ImageBackground>
 
-                <View style={{ flexDirection: 'row' }}>
+                <View style={{ flexDirection: 'row', marginTop:20 }}>
 
                     <Text style={styles.textblacktextstyle}>ABOUT US</Text>
 
@@ -90,7 +130,7 @@ class WhoWeAreActivity extends Component {
 
            
 
-                <Text style={styles.description_text_color}>In 1992, Tim Berners-Lee circulated a document titled “HTML Tags,” which outlined just 20 tags, many of which are now obsolete or have taken other forms. The first surviving tag to be defined in the document, after the crucial anchor tag, is the paragraph tag. It wasn’t until 1993 that a discussion emerged on the proposed image tag</Text>
+        <Text style={styles.description_text_color}>{this.state.description}</Text>
 
              
 
@@ -151,20 +191,20 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     textblacktextstyle: {
-        fontSize: 19,
+        fontSize: 15,
         color: '#06142D',
-        marginTop:10,
-        marginLeft:10,
+        marginTop: 8,
+        marginLeft: 5,
         marginLeft: 10
     },
     downArrowStyle: {
-        height: 25,
-        width: 25,
+        height: 15,
+        width: 15,
         marginTop: 10,
         marginLeft: 20
     },
     description_text_color: {
-        color: "black",
+        color: "#999A9A",
         fontSize: 15,
         marginTop:30,
         marginLeft:10

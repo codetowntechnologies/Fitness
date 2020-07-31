@@ -28,7 +28,12 @@ const strings = new LocalizedStrings({
     no_videos_found:'No Videos Found',
     didnt_received_code: 'Didn\'t receive code?',
     send_again: 'send again',
-
+    please_enter_current_password: 'Please enter current password',
+    please_enter_new_password: 'Please enter new password',
+    new_password_confirm_password_not_match:'new password and confirm password are not matched, please check again',
+    play: 'Play',
+    subscribed: 'Subscribed',
+    similar: 'Similar',
   }
 });
 

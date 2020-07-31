@@ -13,27 +13,21 @@ import {
 } from 'react-native';
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 import stringsoflanguages from '../components/locales/stringsoflanguages';
-
+var videoId;
+console.disableYellowBox = true;
 
 function Item({ item }) {
     return (
         <View style={styles.listItem}>
 
-            <ImageBackground source={{ uri: 'https://digimonk.co/fitness/uploads/video_logo/' + item.image }}
-                style={{ width: 400, height: 300, justifyContent: 'center' }}
-                imageStyle={{ borderTopLeftRadius: 20, borderTopRightRadius: 20 }}>
-                <Image source={require('../images/play_icon.png')}
-                    style={styles.playiconstyle} />
 
-            </ImageBackground>
-
-            <View style={styles.videoBottomView}>
+            <View style={styles.similarvideoBottomView}>
 
                 <View style={{ flexDirection: 'row', flex: .60 }}>
 
-                    <Text style={styles.textpinktextstyle}>{item.id} .</Text>
+                    <Text style={styles.textpinktextstyle}>{item.id}.</Text>
 
-                    <Text style={styles.textblacktextstyle}>{item.name}</Text>
+                    <Text style={styles.textpinktextstyle}>{item.name}</Text>
                 </View>
 
                 <View style={{ flexDirection: 'row', flex: .40, justifyContent: 'center', alignItems: 'flex-end' }}>
@@ -50,13 +44,22 @@ function Item({ item }) {
 }
 
 
+
 class DashboardDetailActivity extends Component {
 
     constructor(props) {
         super(props);
-        this.videoList = this.videoList.bind(this);
+        this.videoDetail = this.videoDetail.bind(this);
+        this.similarvideolist = this.similarvideolist.bind(this);
         this.state = {
-            baseUrl: 'https://digimonk.co/fitness/api/Api/videoList',
+            baseUrl: 'https://digimonk.co/fitness/api/Api/videoetailById',
+            similarvideourl: 'https://digimonk.co/fitness/api/Api/similarVideoList',
+            sr_nu: '',
+            name: '',
+            image: '',
+            description: '',
+            price: '',
+            monthname: ''
         };
     }
 
@@ -70,12 +73,18 @@ class DashboardDetailActivity extends Component {
     }
 
     static navigationOptions = {
-        title: 'Dashboard'
+        title: 'Dashboard Detail'
     };
 
     componentDidMount() {
-        this.showLoading();
-        this.videoList();
+
+        const { navigation } = this.props;
+        videoId = navigation.getParam('id', 'no-id');
+
+        console.log("VIDEO ID===" + videoId)
+        //   this.showLoading();
+        this.videoDetail();
+        this.similarvideolist();
     }
 
     ListEmpty = () => {
@@ -93,15 +102,18 @@ class DashboardDetailActivity extends Component {
     };
 
 
-    videoList() {
+    videoDetail() {
 
         var url = this.state.baseUrl;
         console.log('url:' + url);
         fetch(url, {
-            method: 'GET',
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
+            body: JSON.stringify({
+                id: videoId
+            }),
         })
             .then(response => response.json())
             .then(responseData => {
@@ -109,7 +121,56 @@ class DashboardDetailActivity extends Component {
                 if (responseData.status == '0') {
                     alert(responseData.message);
                 } else {
+
+                    console.log("response data ===" + responseData)
+
+                    this.setState({ sr_nu: responseData.data.sr_nu });
+                    this.setState({ name: responseData.data.name });
+                    this.setState({ image: responseData.data.image });
+                    this.setState({ description: responseData.data.description });
+
+                    this.setState({ price: responseData.data.price });
+                    this.setState({ monthname: responseData.data.monthname });
+
+
+
+
+
+                }
+
+                console.log('response object:', responseData);
+            })
+            .catch(error => {
+                this.hideLoading();
+                console.error(error);
+            })
+
+            .done();
+    }
+
+    similarvideolist() {
+
+        var url = this.state.similarvideourl;
+        console.log('url:' + url);
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                id: videoId
+            }),
+        })
+            .then(response => response.json())
+            .then(responseData => {
+                this.hideLoading();
+                if (responseData.status == '0') {
+                    alert(responseData.message);
+                } else {
+
                     this.setState({ data: responseData.data });
+                    console.log("response data ===" + responseData)
+
                 }
 
                 console.log('response object:', responseData);
@@ -130,19 +191,19 @@ class DashboardDetailActivity extends Component {
                 <View style={styles.headerView}>
 
 
-                    <TouchableOpacity style={{
-                        flex: .10
-                    }}
-                    >
+                    <TouchableOpacity style={{ flex: .10 }}
 
-                        <Image source={require('../images/small-logo.png')}
-                            style={styles.MenuHomeIconStyle} />
+                        onPress={() => { this.props.navigation.goBack() }}>
+
+
+                        <Image source={require('../images/back_icon.png')}
+                            style={styles.backIconStyle} />
+
 
                     </TouchableOpacity>
 
 
-                    <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center', flex: .80 }}
-                    >
+                    <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center', flex: .80 }} >
 
                         <Text style={styles.screentitle}>MENEZES PILATES</Text>
 
@@ -164,56 +225,137 @@ class DashboardDetailActivity extends Component {
                 </View>
 
 
-                <View style={styles.listItem}>
+                <ScrollView>
 
-                    <ImageBackground source={{ uri: 'https://digimonk.co/fitness/uploads/video_logo/' + item.image }}
-                        style={{ width: 400, height: 300, justifyContent: 'center' }}
-                        imageStyle={{ borderTopLeftRadius: 20, borderTopRightRadius: 20 }}>
-                        <Image source={require('../images/play_icon.png')}
-                            style={styles.playiconstyle} />
 
-                    </ImageBackground>
+                    <View style={styles.listItem}>
 
-                    <View style={styles.videoBottomView}>
+                        <ImageBackground source={{ uri: 'https://digimonk.co/fitness/uploads/video_logo/' + this.state.image }}
+                            style={{ width: 400, height: 300, justifyContent: 'center' }}>
+                            <Image source={require('../images/play_icon.png')}
+                                style={styles.playiconstyle} />
 
-                        <View style={{ flexDirection: 'row', flex: .60 }}>
+                        </ImageBackground>
 
-                            <Text style={styles.textpinktextstyle}>{item.id} .</Text>
 
-                            <Text style={styles.textblacktextstyle}>{item.name}</Text>
+                        <View style={styles.videoBottomView}>
+
+                            <View style={{ flexDirection: 'row', flex: .60 }}>
+
+                                <Text style={styles.textpinktextstyle}>{this.state.sr_nu}. </Text>
+
+                                <Text style={styles.textblacktextstyle}>{this.state.name}</Text>
+                            </View>
+
+                            <View style={{ flexDirection: 'row', flex: .40, justifyContent: 'center', alignItems: 'flex-end' }}>
+
+                                <Text style={styles.textpinktextstyle}> ${this.state.price}/{this.state.monthname}</Text>
+
+                            </View>
+
                         </View>
 
-                        <View style={{ flexDirection: 'row', flex: .40, justifyContent: 'center', alignItems: 'flex-end' }}>
+                        <View style={{ flexDirection: 'row', flex: 1 }}>
 
-                            <Text style={styles.textpinktextstyle}> ${item.price}/{item.monthname}</Text>
+                            <View style={{
+                                flexDirection: 'row', marginTop: 2, padding: 10, backgroundColor: '#FB3954', flex: .5,
+                                justifyContent: 'center', alignItems: 'center', margin: 15, borderRadius: 5
+                            }}
+                            >
+
+
+                                <Image
+                                    style={styles.StylePlayIcon}
+                                    source={require('../images/play.png')} />
+
+
+                                <Text style={{
+                                    color: 'white', marginLeft: 5, fontSize: RFPercentage(1.7), textAlign: 'center',
+                                    marginRight: 5
+                                }}>
+                                    {stringsoflanguages.play}</Text>
+
+
+                            </View>
+
+
+                            <View style={{
+                                flexDirection: 'row', marginTop: 2, padding: 10, flex: .5, backgroundColor: '#ADB6C1',
+                                justifyContent: 'center', alignItems: 'center', margin: 15, borderRadius: 5
+                            }}>
+
+
+                                <Image
+                                    style={styles.StyleSubscribedVideo}
+                                    source={require('../images/my_subscription.png')} />
+
+
+
+                                <Text style={{
+                                    color: 'white', marginLeft: 5, fontSize: RFPercentage(1.7), textAlign: 'center',
+                                    marginRight: 5
+                                }}>
+                                    {stringsoflanguages.subscribed}</Text>
+
+
+                            </View>
+
+
 
                         </View>
+
+                        <View style={{ flexDirection: 'row' }}>
+
+                            <Text style={styles.textblacktextstyle}>Description</Text>
+
+                            <Image source={require('../images/down_arrow.png')}
+                                style={styles.downArrowStyle} />
+
+                        </View>
+
+
+
+                        <Text style={styles.description_text_color}>{this.state.description}</Text>
+
+
+                        <View style={{ flexDirection: 'row', padding: 5, marginLeft: 5, marginRight: 5 }}>
+
+                            <Text style={{ color: '#FB3954', fontSize: RFPercentage(1.9), flex: .5, marginLeft: 5, textAlign: 'left', marginTop: 10 }}>{stringsoflanguages.similar} </Text>
+
+                        </View>
+
+                        <View style={styles.hairline} />
 
                     </View>
 
 
-                </View>
 
-                {/* <FlatList
-                    style={{ flex: 1 }}
-                    data={this.state.data}
 
-                    renderItem={({ item, index }) => (
+                    <FlatList
+                        style={{ flex: 1 }}
+                        data={this.state.data}
 
-                        <TouchableWithoutFeedback>
+                        renderItem={({ item }) => (
 
-                            <View>
-                                <Item item={item}
-                                />
-                            </View>
+                            <TouchableWithoutFeedback onPress={() => this.actionOnRow(item)}>
 
-                        </TouchableWithoutFeedback>
+                                <View>
+                                    <Item item={item}
+                                    />
+                                </View>
 
-                    )}
-                    keyExtractor={item => item.id}
-                    ListEmptyComponent={this.ListEmpty}
-                /> */}
+                            </TouchableWithoutFeedback>
 
+                        )}
+                        keyExtractor={item => item.id}
+                        ListEmptyComponent={this.ListEmpty}
+                    />
+
+
+
+
+
+                </ScrollView>
 
 
                 <View style={styles.tabStyle}>
@@ -317,7 +459,6 @@ const styles = StyleSheet.create({
     listItem: {
         marginLeft: 5,
         marginRight: 5,
-        marginTop: 10,
         flex: 1,
         alignSelf: "center",
         flexDirection: "column",
@@ -441,29 +582,17 @@ const styles = StyleSheet.create({
     videoBottomView: {
         height: 50,
         width: 400,
-        borderBottomLeftRadius: 10,
-        borderBottomRightRadius: 10,
         padding: 10,
-        shadowColor: '#ecf6fb',
-        elevation: 20,
-        shadowColor: 'grey',
-        shadowOffset: { width: 2, height: 2 },
-        shadowOpacity: 1,
         flexDirection: 'row',
-        backgroundColor: '#FFFFFF',
         alignItems: 'center'
-    },
-    textblacktextstyle: {
-        fontSize: 15,
-        color: '#1B273E',
-        fontWeight: 'bold',
     },
     textpinktextstyle: {
         fontSize: 15,
         fontWeight: 'bold',
         color: '#FB3954',
         textAlign: 'right',
-        marginRight: 3
+        marginRight: 3,
+        marginTop: 8
     },
     playiconstyle: {
         height: 70,
@@ -509,10 +638,77 @@ const styles = StyleSheet.create({
         shadowColor: 'grey',
         shadowOpacity: 1,
         alignItems: 'center'
-
-
     },
-
+    backIconStyle: {
+        height: 25,
+        width: 50,
+        marginLeft: 50,
+        tintColor: 'white',
+        alignSelf: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    downArrowStyle: {
+        height: 15,
+        width: 15,
+        marginTop: 10,
+        marginLeft: 20
+    },
+    textblacktextstyle: {
+        fontSize: 15,
+        color: '#06142D',
+        marginTop: 8,
+        marginLeft: 5,
+        marginLeft: 10
+    },
+    textpinktextstyle: {
+        fontSize: 15,
+        color: '#FB3954',
+        marginTop: 8,
+        marginLeft: 5,
+        marginLeft: 10
+    },
+    description_text_color: {
+        color: "#999A9A",
+        fontSize: 15,
+        marginTop: 10,
+        marginLeft: 10
+    },
+    StylePlayIcon: {
+        width: 25,
+        height: 25,
+        marginRight: 15,
+        alignSelf: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    StyleSubscribedVideo: {
+        width: 25,
+        height: 25,
+        marginRight: 15,
+        tintColor: 'white',
+        alignSelf: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    hairline: {
+        borderBottomColor: '#AFB8C3',
+        borderBottomWidth: 1,
+    },
+    similarvideoBottomView: {
+        height: 50,
+        width: 400,
+        margin: 10,
+        padding: 10,
+        shadowColor: '#ecf6fb',
+        elevation: 10,
+        shadowColor: 'grey',
+        shadowOffset: { width: 2, height: 2 },
+        shadowOpacity: 1,
+        flexDirection: 'row',
+        backgroundColor: '#FFFFFF',
+        alignItems: 'center'
+    },
 });
 
 export default DashboardDetailActivity;
