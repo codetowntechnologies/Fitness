@@ -34,6 +34,7 @@ const strings = new LocalizedStrings({
     play: 'Play',
     subscribed: 'Subscribed',
     similar: 'Similar',
+    no_notification_found:'No Notification Found',
   }
 });
 

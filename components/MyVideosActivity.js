@@ -30,7 +30,7 @@ function Item({ item }) {
 
                 <View style={{ flexDirection: 'row', flex: .60 }}>
 
-                    <Text style={styles.textpinktextstyle}>{item.id} .</Text>
+                    <Text style={styles.textpinktextstyle}>{item.sr_nu} .</Text>
 
                     <Text style={styles.textblacktextstyle}>{item.name}</Text>
                 </View>
@@ -56,6 +56,7 @@ class MyVideosActivity extends Component {
         this.state = {
             baseUrl: 'https://digimonk.co/fitness/api/Api/subscribedVideoList',
             userId: '',
+            isnoDataVisible: false
         };
     }
 
@@ -83,6 +84,20 @@ class MyVideosActivity extends Component {
         });
     }
 
+    ListEmpty = () => {
+        return (
+            //View to show when list is empty
+            <View style={styles.container}>
+                {
+                    this.state.isnoDataVisible ?
+                        <Text style={{ textAlign: 'center' }}>{stringsoflanguages.no_videos_found}</Text>
+                        : null
+                }
+            </View>
+        );
+    };
+
+
 
     videoList() {
 
@@ -95,15 +110,17 @@ class MyVideosActivity extends Component {
             },
             body: JSON.stringify({
                 userid: this.state.userId
-                
+
             }),
         })
             .then(response => response.json())
             .then(responseData => {
                 this.hideLoading();
                 if (responseData.status == '0') {
-                    alert(responseData.message);
+                    this.setState({ isnoDataVisible: true })
+
                 } else {
+                    this.setState({ isnoDataVisible: false })
                     this.setState({ data: responseData.data });
                 }
 
@@ -119,10 +136,11 @@ class MyVideosActivity extends Component {
 
     actionOnRow(item) {
 
+        console.log("item id ===" +  item.id)
         this.props.navigation.navigate('DashboardDetail', {
-          id: item.id
-        })
-
+            id: item.id
+          })
+  
     }
 
 
@@ -264,8 +282,6 @@ class MyVideosActivity extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
         backgroundColor: '#F6F9FE'
     },
     loading: {
@@ -432,7 +448,8 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#FB3954',
         textAlign: 'right',
-        marginRight: 3
+        marginRight: 3,
+        marginLeft:15
     },
     playiconstyle: {
         height: 70,

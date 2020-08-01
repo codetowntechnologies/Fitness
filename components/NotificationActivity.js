@@ -38,6 +38,7 @@ class NotificationActivity extends Component {
         this.state = {
             baseUrl: 'https://digimonk.co/fitness/api/Api/getNotification',
             userId: '',
+            isnoDataVisible: false
         };
     }
 
@@ -83,8 +84,10 @@ class NotificationActivity extends Component {
           .then(responseData => {
             this.hideLoading();
             if (responseData.status == '0') {
-              alert(responseData.message);
+             // alert(responseData.message);
+              this.setState({ isnoDataVisible: true })
             } else {
+                this.setState({ isnoDataVisible: false })
               this.setState({ data: responseData.data});
             }
 
@@ -100,19 +103,19 @@ class NotificationActivity extends Component {
 
 
 
-    ListEmpty = () => {
+      ListEmpty = () => {
         return (
-
+            //View to show when list is empty
             <View style={styles.container}>
                 {
                     this.state.isnoDataVisible ?
-                        <Text style={{ textAlign: 'center' }}>{stringsoflanguages.no_videos_found}</Text>
+                        <Text style={{ textAlign: 'center' }}>{stringsoflanguages.no_notification_found}</Text>
                         : null
                 }
             </View>
-
         );
     };
+
 
 
     render() {

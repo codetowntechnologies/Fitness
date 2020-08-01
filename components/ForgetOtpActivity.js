@@ -11,6 +11,8 @@ import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 import OTPInputView from '@twotalltotems/react-native-otp-input'
 import stringsoflanguages from '../components/locales/stringsoflanguages';
 import AsyncStorage from '@react-native-community/async-storage';
+import LinearGradient from 'react-native-linear-gradient';
+
 
 var otpcode, phonenumber;
 
@@ -137,30 +139,57 @@ class ForgetOtpActivity extends Component {
         return (
             <View style={styles.container}>
 
+<LinearGradient
+                    colors={['#FB3954', '#FA564C', '#F78E3C']}
+                    style={styles.linearGradientFull}
+                    start={{ x: 0, y: 0.5 }}
+                    end={{ x: 1, y: 0.5 }}>
 
-                <View style={{
-                    flexDirection: 'column', alignItems: 'center', justifyContent: 'center', backgroundColor: '#FB4252',
-                    flex: .4, width: '100%'
 
-                }}>
+
+<LinearGradient
+                    colors={['#FB3954', '#FA564C', '#F78E3C']}
+                    style={styles.linearGradient}
+                    start={{ x: 0, y: 0.5 }}
+                    end={{ x: 1, y: 0.5 }}>
+
 
                     <View style={{ flexDirection: 'row' }}>
 
+                        <TouchableOpacity style={{ flex: .20, marginTop: 30 }}
+                            onPress={() => { this.props.navigation.navigate('Login') }}>
 
-                        <View style={{ flex: .10 }}>
+                            <Image source={require('../images/back_icon.png')}
+                                style={styles.backIconStyle} />
 
-                            <TouchableOpacity style={{ flex: .20, marginTop: 30 }}
-                                onPress={() => { this.props.navigation.goBack() }}>
 
-                                <Image source={require('../images/back_icon.png')}
-                                    style={styles.backIconStyle} />
+                        </TouchableOpacity>
 
-                            </TouchableOpacity>
+                        <View style={{ flex: .60 }}>
+
+
 
                         </View>
 
 
-                        <View style={{ flex: .90 }}>
+                        <View style={{ flex: .20 }}>
+
+
+                        </View>
+
+                    </View>
+
+
+
+                    <View style={{ flexDirection: 'row' }}>
+
+                        <TouchableOpacity style={{ flex: .20, marginTop: 30 }}
+                            onPress={() => { this.props.navigation.navigate('Login') }}>
+
+
+                        </TouchableOpacity>
+
+                        <View style={{ flex: .60 }}>
 
                             <Image source={require('../images/logo.png')}
                                 style={styles.logoStyle} />
@@ -168,9 +197,22 @@ class ForgetOtpActivity extends Component {
                             <Text style={styles.screentitle}>MENEZES PILATES</Text>
 
                         </View>
+
+
+                        <View style={{ flex: .20 }}>
+
+
+                        </View>
+
                     </View>
 
-                </View>
+
+
+
+                </LinearGradient>
+
+
+
 
                 <View style={{
                     flexDirection: 'column', alignItems: 'center', backgroundColor: '#ffffff',
@@ -212,7 +254,7 @@ class ForgetOtpActivity extends Component {
 
                 </View>
 
-
+</LinearGradient>
             </View>
         );
     }
@@ -262,7 +304,7 @@ const styles = StyleSheet.create({
     },
     buttonWhiteTextStyle: {
         textAlign: 'center',
-        fontSize: 15,
+        fontSize: 16,
         color: 'white',
         alignContent: 'center',
     },
@@ -335,16 +377,15 @@ const styles = StyleSheet.create({
     },
     screentitle: {
         color: "white",
-        fontSize: 20,
+        fontSize: 18,
         textAlign: 'center',
-        fontWeight: 'bold'
+        marginBottom: 20,
     },
     title: {
         color: '#3F434E',
         fontSize: 20,
-        marginTop: 20,
+        marginTop: 10,
         textAlign: 'center',
-        fontWeight: 'bold'
     },
     backIconStyle: {
         marginTop: 3,
@@ -359,7 +400,7 @@ const styles = StyleSheet.create({
     didntrectext: {
         fontSize: 15,
         textAlign: 'center',
-        color: '#6F737A',
+        color: '#2B2F3B',
         alignSelf: 'center',
         marginBottom: 10
     },
@@ -367,6 +408,7 @@ const styles = StyleSheet.create({
         fontSize: 15,
         textAlign: 'center',
         color: '#FB4252',
+        marginLeft:5,
         alignSelf: 'center',
         marginBottom: 10,
         textDecorationLine: 'underline'
@@ -381,7 +423,21 @@ const styles = StyleSheet.create({
     underlineStyleHighLighted: {
         borderColor: "#6F737A",
     },
+    linearGradient: {
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flex: .4,
+        width: '100%'
+    },
+    linearGradientFull: {
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flex: 1,
+        width: '100%'
 
+    },
 });
 
 export default ForgetOtpActivity;

@@ -11,6 +11,7 @@ import {
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 import stringsoflanguages from './locales/stringsoflanguages';
 import AsyncStorage from '@react-native-community/async-storage';
+import LinearGradient from 'react-native-linear-gradient';
 
 class ResetPasswordActivity extends Component {
 
@@ -92,7 +93,7 @@ class ResetPasswordActivity extends Component {
                 if (responseData.status == '0') {
                     alert(responseData.message);
                 } else {
-                 
+
                     this.props.navigation.navigate('Login')
                     //   this.saveLoginUserData(responseData);
                 }
@@ -113,84 +114,88 @@ class ResetPasswordActivity extends Component {
         return (
             <View style={styles.container}>
 
+                <LinearGradient
+                    colors={['#FB3954', '#FA564C', '#F78E3C']}
+                    style={styles.linearGradientFull}
+                    start={{ x: 0, y: 0.5 }}
+                    end={{ x: 1, y: 0.5 }}>
 
-                <View style={{
-                    flexDirection: 'column', alignItems: 'center', justifyContent: 'center', backgroundColor: '#FB4252',
-                    flex: .4, width: '100%'
+                    <LinearGradient
+                        colors={['#FB3954', '#FA564C', '#F78E3C']}
+                        style={styles.linearGradient}
+                        start={{ x: 0, y: 0.5 }}
+                        end={{ x: 1, y: 0.5 }}>
+
+                        <Image source={require('../images/logo.png')}
+                            style={styles.logoStyle} />
+
+                        <Text style={styles.screentitle}>MENEZES PILATES</Text>
+
+                    </LinearGradient>
+
+                    <View style={{
+                        flexDirection: 'column', alignItems: 'center', backgroundColor: '#ffffff',
+                        flex: .6, width: '100%', borderTopRightRadius: 30, borderTopLeftRadius: 30
+                    }}>
+
+                        {this.state.loading && (
+                            <View style={styles.loading}>
+                                <ActivityIndicator size="large" color="#ffffff" />
+                            </View>
+                        )}
+
+                        <Text style={styles.title}>Reset Password</Text>
 
 
-                }}>
+                        <View
+                            style={styles.inputView}>
 
-                    <Image source={require('../images/logo.png')}
-                        style={styles.logoStyle} />
+                            <Image source={require('../images/lock.png')}
+                                style={styles.ImageLockIconStyle} />
 
-                    <Text style={styles.screentitle}>MENEZES PILATES</Text>
+                            <TextInput
+                                placeholder="New Password"
+                                placeholderTextColor="#AEB6C1"
+                                underlineColorAndroid="transparent"
+                                style={styles.input}
+                                secureTextEntry={true}
+                                onChangeText={password => this.setState({ password })}
+                            />
 
-                </View>
-
-                <View style={{
-                    flexDirection: 'column', alignItems: 'center', backgroundColor: '#ffffff',
-                    flex: .6, width: '100%', borderTopRightRadius: 30, borderTopLeftRadius: 30
-                }}>
-
-                    {this.state.loading && (
-                        <View style={styles.loading}>
-                            <ActivityIndicator size="large" color="#ffffff" />
                         </View>
-                    )}
-
-                    <Text style={styles.title}>Reset Password</Text>
 
 
-                    <View
-                        style={styles.inputView}>
+                        <View
+                            style={styles.inputView1}>
 
-                        <Image source={require('../images/lock.png')}
-                            style={styles.ImageLockIconStyle} />
+                            <Image source={require('../images/lock.png')}
+                                style={styles.ImageLockIconStyle} />
 
-                        <TextInput
-                            placeholder="New Password"
-                            placeholderTextColor="#C3C8D1"
-                            underlineColorAndroid="transparent"
-                            style={styles.input}
-                            secureTextEntry={true}
-                            onChangeText={password => this.setState({ password })}
-                        />
+                            <TextInput
+                                placeholder="Confirm Password"
+                                placeholderTextColor="#AEB6C1"
+                                underlineColorAndroid="transparent"
+                                style={styles.input}
+                                secureTextEntry={true}
+                                onChangeText={confirmpassword => this.setState({ confirmpassword })}
+                            />
+
+                        </View>
+
+
+                        <TouchableOpacity
+                            style={styles.loginButtonStyle}
+                            activeOpacity={.5}
+                            onPress={this.CheckTextInput}>
+
+
+                            <Text style={styles.buttonWhiteTextStyle}>Reset Password</Text>
+
+                        </TouchableOpacity>
+
 
                     </View>
-
-
-                    <View
-                        style={styles.inputView1}>
-
-                        <Image source={require('../images/lock.png')}
-                            style={styles.ImageLockIconStyle} />
-
-                        <TextInput
-                            placeholder="Confirm Password"
-                            placeholderTextColor="#C3C8D1"
-                            underlineColorAndroid="transparent"
-                            style={styles.input}
-                            secureTextEntry={true}
-                            onChangeText={confirmpassword => this.setState({ confirmpassword })}
-                        />
-
-                    </View>
-
-
-                    <TouchableOpacity
-                        style={styles.loginButtonStyle}
-                        activeOpacity={.5}
-                        onPress={this.CheckTextInput}>
-
-
-                        <Text style={styles.buttonWhiteTextStyle}>Reset Password</Text>
-
-                    </TouchableOpacity>
-
-
-                </View>
-
+                </LinearGradient>
 
             </View>
         );
@@ -225,6 +230,8 @@ const styles = StyleSheet.create({
         width: 300,
         height: 50,
         padding: 10,
+        fontSize: 14,
+        marginLeft: 10,
         textAlign: 'left',
         backgroundColor: 'transparent'
     },
@@ -249,7 +256,7 @@ const styles = StyleSheet.create({
     },
     buttonWhiteTextStyle: {
         textAlign: 'center',
-        fontSize: 15,
+        fontSize: 16,
         color: 'white',
         alignContent: 'center',
     },
@@ -283,7 +290,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         backgroundColor: 'white',
         width: '90%',
-        marginTop: 100,
+        marginTop: 50,
         borderRadius: 10,
         elevation: 20,
         shadowColor: 'grey',
@@ -334,17 +341,31 @@ const styles = StyleSheet.create({
     screentitle: {
         color: "white",
         fontSize: 20,
-        textAlign: 'center',
-        fontWeight: 'bold'
+        textAlign: 'center'
     },
     title: {
-        color: '#3F434E',
-        fontSize: 20,
-        marginTop: 20,
+        color: '#2B2F3B',
+        fontSize: 21,
+        marginTop: 10,
         textAlign: 'center',
-        fontWeight: 'bold'
-    },
 
+    },
+    linearGradient: {
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flex: .4,
+        width: '100%'
+
+    },
+    linearGradientFull: {
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flex: 1,
+        width: '100%'
+
+    },
 });
 
 export default ResetPasswordActivity;

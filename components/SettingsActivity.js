@@ -122,7 +122,7 @@ class SettingsActivity extends Component {
 
                     }}>
 
-                        <TouchableOpacity style={{
+                        <View style={{
                             alignItems: 'center', justifyContent: 'center',
                             alignContent: 'center'
                         }}
@@ -133,7 +133,7 @@ class SettingsActivity extends Component {
                                 style={{ width: 100, height: 100, borderRadius: 100 / 2, borderWidth: 2, borderColor: 'white' }}
                             />
 
-                        </TouchableOpacity>
+                        </View>
 
 
                     <Text style={styles.profileNameStyle}>{this.state.name}</Text>

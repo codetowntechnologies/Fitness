@@ -11,6 +11,7 @@ import {
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 import stringsoflanguages from './locales/stringsoflanguages';
 import AsyncStorage from '@react-native-community/async-storage';
+import LinearGradient from 'react-native-linear-gradient';
 
 class ForgotPasswordActivity extends Component {
 
@@ -46,7 +47,7 @@ class ForgotPasswordActivity extends Component {
     CheckTextInput = () => {
         if (this.state.phonenumber != '') {
             //     //Check for the phone number
-            this.showLoading();
+            // this.showLoading();
             this.forgotCall();
 
         } else {
@@ -75,8 +76,9 @@ class ForgotPasswordActivity extends Component {
                     alert(responseData.message);
                 } else {
 
+                    console.log("response data id ===" + responseData.data.id)
                     AsyncStorage.setItem('@user_id', responseData.data.id.toString());
-                    
+
                     this.props.navigation.navigate('ForgetOtp', {
                         otpcode: responseData.data.otpcode,
                         phonenumber: this.state.phonenumber
@@ -99,112 +101,145 @@ class ForgotPasswordActivity extends Component {
         return (
             <View style={styles.container}>
 
-
-                <View style={{
-                    flexDirection: 'column', alignItems: 'center', justifyContent: 'center', backgroundColor: '#FB4252',
-                    flex: .4, width: '100%'
-
-
-                }}>
-
-                    <View style={{ flexDirection: 'row' }}>
+                <LinearGradient
+                    colors={['#FB3954', '#FA564C', '#F78E3C']}
+                    style={styles.linearGradientFull}
+                    start={{ x: 0, y: 0.5 }}
+                    end={{ x: 1, y: 0.5 }}>
 
 
-                        <View style={{ flex: .10 }}>
-
-                            <TouchableOpacity style={{ flex: .20, marginTop: 30 }}
-                                onPress={() => { this.props.navigation.goBack() }}>
-
-                                <Image source={require('../images/back_icon.png')}
-                                    style={styles.backIconStyle} />
-
-                            </TouchableOpacity>
-
-                        </View>
-
-
-                        <View style={{ flex: .90 }}>
-
-                            <Image source={require('../images/logo.png')}
-                                style={styles.logoStyle} />
-
-                            <Text style={styles.screentitle}>MENEZES PILATES</Text>
-
-                        </View>
-                    </View>
-
-                </View>
-
-                <View style={{
-                    flexDirection: 'column', alignItems: 'center', backgroundColor: '#ffffff',
-                    flex: .6, width: '100%', borderTopRightRadius: 30, borderTopLeftRadius: 30
-                }}>
-
-                    {this.state.loading && (
-                        <View style={styles.loading}>
-                            <ActivityIndicator size="large" color="#ffffff" />
-                        </View>
-                    )}
-
-                    <Text style={styles.title}>Forgot Password</Text>
-
-                    <View
-                        style={styles.inputView}>
-
-                        <Image source={require('../images/phone_no.png')}
-                            style={styles.ImageIconStyle} />
+                    <LinearGradient
+                        colors={['#FB3954', '#FA564C', '#F78E3C']}
+                        style={styles.linearGradient}
+                        start={{ x: 0, y: 0.5 }}
+                        end={{ x: 1, y: 0.5 }}>
 
 
                         <View style={{ flexDirection: 'row' }}>
 
-                            <TextInput
-                                placeholder="+61"
-                                placeholderTextColor="#C3C8D1"
-                                underlineColorAndroid="transparent"
-                                keyboardType='number-pad'
-                                underlineColorAndroid="#ADB6C1"
-                                editable={false}
+                            <TouchableOpacity style={{ flex: .20, marginTop: 30 }}
+                                onPress={() => { this.props.navigation.navigate('Login') }}>
 
-                            />
+                                <Image source={require('../images/back_icon.png')}
+                                    style={styles.backIconStyle} />
 
-                            <Image source={require('../images/down-arrow.png')}
-                                style={styles.arrowIconStyle} />
+
+                            </TouchableOpacity>
+
+                            <View style={{ flex: .60 }}>
+
+
+
+                            </View>
+
+
+                            <View style={{ flex: .20 }}>
+
+
+                            </View>
 
                         </View>
 
-                        <TextInput
-                            placeholder="Phone Number"
-                            placeholderTextColor="#C3C8D1"
-                            underlineColorAndroid="transparent"
-                            style={styles.inputphonenumber}
-                            keyboardType='number-pad'
-                            onChangeText={phonenumber => this.setState({ phonenumber })}
-                        />
+
+
+                        <View style={{ flexDirection: 'row' }}>
+
+                            <TouchableOpacity style={{ flex: .20, marginTop: 30 }}
+                                onPress={() => { this.props.navigation.navigate('Login') }}>
+
+
+                            </TouchableOpacity>
+
+                            <View style={{ flex: .60 }}>
+
+                                <Image source={require('../images/logo.png')}
+                                    style={styles.logoStyle} />
+
+                                <Text style={styles.screentitle}>MENEZES PILATES</Text>
+
+                            </View>
+
+
+                            <View style={{ flex: .20 }}>
+
+
+                            </View>
+
+                        </View>
+
+
+                    </LinearGradient>
+
+                    <View style={{
+                        flexDirection: 'column', alignItems: 'center', backgroundColor: '#ffffff',
+                        flex: .6, width: '100%', borderTopRightRadius: 30, borderTopLeftRadius: 30
+                    }}>
+
+                        {/* {this.state.loading && (
+                        <View style={styles.loading}>
+                            <ActivityIndicator size="large" color="#ffffff" />
+                        </View>
+                    )} */}
+
+                        <Text style={styles.title}>Forgot Password</Text>
+
+                        <View
+                            style={styles.inputView}>
+
+                            <Image source={require('../images/phone_no.png')}
+                                style={styles.ImageIconStyle} />
+
+
+                            <View style={{ flexDirection: 'row' }}>
+
+                                <TextInput
+                                    placeholder="+61"
+                                    placeholderTextColor="#C3C8D1"
+                                    underlineColorAndroid="transparent"
+                                    keyboardType='number-pad'
+                                    underlineColorAndroid="#ADB6C1"
+                                    editable={false}
+
+                                />
+
+                                <Image source={require('../images/down-arrow.png')}
+                                    style={styles.arrowIconStyle} />
+
+                            </View>
+
+                            <TextInput
+                                placeholder="Phone Number"
+                                placeholderTextColor="#AEB6C1"
+                                underlineColorAndroid="transparent"
+                                style={styles.inputphonenumber}
+                                keyboardType='number-pad'
+                                onChangeText={phonenumber => this.setState({ phonenumber })}
+                            />
+
+
+                        </View>
+
+
+
+
+                        <TouchableOpacity
+                            style={styles.loginButtonStyle}
+                            activeOpacity={.5}
+                            onPress={this.CheckTextInput}>
+
+
+
+                            <Text style={styles.buttonWhiteTextStyle}>Submit</Text>
+
+
+
+                        </TouchableOpacity>
+
 
 
                     </View>
 
-
-
-
-                    <TouchableOpacity
-                        style={styles.loginButtonStyle}
-                        activeOpacity={.5}
-                        onPress={this.CheckTextInput}>
-
-
-
-                        <Text style={styles.buttonWhiteTextStyle}>Submit</Text>
-
-
-
-                    </TouchableOpacity>
-
-
-
-                </View>
-
-
+                </LinearGradient>
             </View>
         );
     }
@@ -246,6 +281,7 @@ const styles = StyleSheet.create({
         width: 250,
         height: 50,
         padding: 10,
+        fontSize: 14,
         textAlign: 'left',
         backgroundColor: 'transparent'
     },
@@ -266,14 +302,7 @@ const styles = StyleSheet.create({
         color: 'white',
         alignContent: 'center',
     },
-    forgotpasswordtext: {
-        fontSize: RFPercentage(1.8),
-        textAlign: 'center',
-        color: '#6F737A',
-        marginRight: 10,
-        marginTop: 20,
-        alignSelf: 'center'
-    },
+
     createnewaccounttext: {
         fontSize: RFPercentage(2),
         textAlign: 'center',
@@ -295,8 +324,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: 'white',
-        width: '90%',   
-        marginTop: 80,
+        width: '90%',
+        marginTop: 50,
         borderRadius: 10,
         elevation: 20,
         shadowColor: 'grey',
@@ -321,6 +350,7 @@ const styles = StyleSheet.create({
     ImageIconStyle: {
         height: 25,
         width: 25,
+        marginLeft: 10,
         alignSelf: 'center',
         alignItems: 'center',
         justifyContent: 'center',
@@ -346,27 +376,40 @@ const styles = StyleSheet.create({
     },
     screentitle: {
         color: "white",
-        fontSize: 20,
+        fontSize: 18,
         textAlign: 'center',
-        fontWeight: 'bold'
+        marginBottom: 20,
     },
     backIconStyle: {
-        marginTop: 3,
         height: 25,
         width: 50,
-        marginLeft: 30,
         tintColor: 'white',
         alignSelf: 'center',
         alignItems: 'center',
         justifyContent: 'center',
     },
     title: {
-        color: '#3F434E',
-        fontSize: 20,
-        marginTop: 20,
+        color: '#2B2F3B',
+        fontSize: 21,
+        marginTop: 10,
         textAlign: 'center',
-        fontWeight: 'bold'
-    }
+    },
+    linearGradient: {
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flex: .4,
+        width: '100%'
+
+    },
+    linearGradientFull: {
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flex: 1,
+        width: '100%'
+
+    },
 });
 
 export default ForgotPasswordActivity;

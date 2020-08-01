@@ -11,6 +11,7 @@ import {
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 import stringsoflanguages from './locales/stringsoflanguages';
 import AsyncStorage from '@react-native-community/async-storage';
+import LinearGradient from 'react-native-linear-gradient';
 
 class LoginActivity extends Component {
 
@@ -49,7 +50,7 @@ class LoginActivity extends Component {
             //Check for the Name TextInput
             if (this.state.password != '') {
                 //Check for the Email TextInput
-                this.showLoading();
+                //  this.showLoading();
                 //console.log("registed token===" + this.state.deviceToken)
                 this.logincall();
 
@@ -96,136 +97,136 @@ class LoginActivity extends Component {
 
 
 
-  async saveLoginUserData(responseData) {
-    try {
+    async saveLoginUserData(responseData) {
+        try {
 
-      await AsyncStorage.setItem('@user_id', responseData.data.id.toString());
-      await AsyncStorage.setItem('@email', responseData.data.email.toString());
-      await AsyncStorage.setItem('@name', responseData.data.name.toString());
-      await AsyncStorage.setItem('@is_login', "1");
-      this.props.navigation.navigate('Dashboard') 
+            await AsyncStorage.setItem('@user_id', responseData.data.id.toString());
+            await AsyncStorage.setItem('@email', responseData.data.email.toString());
+            await AsyncStorage.setItem('@name', responseData.data.name.toString());
+            await AsyncStorage.setItem('@is_login', "1");
+            this.props.navigation.navigate('Dashboard')
 
-    } catch (error) {
-      console.log("Error saving data" + error);
+        } catch (error) {
+            console.log("Error saving data" + error);
+        }
     }
-  }
 
     render() {
         return (
+
+
             <View style={styles.container}>
 
-
-                <View style={{
-                    flexDirection: 'column', alignItems: 'center', justifyContent: 'center', backgroundColor: '#FB4252',
-                    flex: .4, width: '100%'
-
-
-                }}>
-
-                    <Image source={require('../images/logo.png')}
-                        style={styles.logoStyle} />
-
-                    <Text style={styles.screentitle}>MENEZES PILATES</Text>
-
-                </View>
-
-                <View style={{
-                    flexDirection: 'column', alignItems: 'center', backgroundColor: '#ffffff',
-                    flex: .6, width: '100%', borderTopRightRadius: 30, borderTopLeftRadius: 30
-                }}>
-
-                    {this.state.loading && (
-                        <View style={styles.loading}>
-                            <ActivityIndicator size="large" color="#ffffff" />
-                        </View>
-                    )}
+                <LinearGradient
+                    colors={['#FB3954', '#FA564C', '#F78E3C']}
+                    style={styles.linearGradientFull}
+                    start={{ x: 0, y: 0.5 }}
+                    end={{ x: 1, y: 0.5 }}>
 
 
+                    <LinearGradient
+                        colors={['#FB3954', '#FA564C', '#F78E3C']}
+                        style={styles.linearGradient}
+                        start={{ x: 0, y: 0.5 }}
+                        end={{ x: 1, y: 0.5 }}>
 
-                    <View
-                        style={styles.inputView}>
+                        <Image source={require('../images/logo.png')}
+                            style={styles.logoStyle} />
 
-                        <Image source={require('../images/phone_no.png')}
-                            style={styles.ImageIconStyle} />
+                        <Text style={styles.screentitle}>MENEZES PILATES</Text>
+
+                    </LinearGradient>
+
+                    <View style={{
+                        flexDirection: 'column', alignItems: 'center', backgroundColor: '#ffffff',
+                        flex: .6, width: '100%', borderTopRightRadius: 30, borderTopLeftRadius: 30
+                    }}>
+
+                        <View
+                            style={styles.inputView}>
+
+                            <Image source={require('../images/phone_no.png')}
+                                style={styles.ImageIconStyle} />
 
 
-                        <View style={{ flexDirection: 'row' }}>
+                            <View style={{ flexDirection: 'row', marginLeft: 10 }}>
+
+                                <TextInput
+                                    placeholder="+61"
+                                    placeholderTextColor="#AEB6C1"
+                                    underlineColorAndroid="transparent"
+                                    keyboardType='number-pad'
+                                    underlineColorAndroid="#ADB6C1"
+                                    editable={false}
+
+                                />
+
+                                <Image source={require('../images/down-arrow.png')}
+                                    style={styles.arrowIconStyle} />
+
+                            </View>
 
                             <TextInput
-                                placeholder="+61"
-                                placeholderTextColor="#C3C8D1"
+                                placeholder="Phone Number"
+                                placeholderTextColor="#AEB6C1"
                                 underlineColorAndroid="transparent"
+                                style={styles.inputphonenumber}
                                 keyboardType='number-pad'
-                                underlineColorAndroid="#ADB6C1"
-                                editable={false}
-
+                                onChangeText={phonenumber => this.setState({ phonenumber })}
                             />
 
-                            <Image source={require('../images/down-arrow.png')}
-                                style={styles.arrowIconStyle} />
 
                         </View>
 
-                        <TextInput
-                            placeholder="Phone Number"
-                            placeholderTextColor="#C3C8D1"
-                            underlineColorAndroid="transparent"
-                            style={styles.inputphonenumber}
-                            keyboardType='number-pad'
-                            onChangeText={phonenumber => this.setState({ phonenumber })}
-                        />
+
+                        <View
+                            style={styles.inputView1}>
+
+                            <Image source={require('../images/lock.png')}
+                                style={styles.ImageLockIconStyle} />
+
+                            <TextInput
+                                placeholder="Password"
+                                placeholderTextColor="#ADB6C1"
+                                underlineColorAndroid="transparent"
+                                style={styles.input}
+                                secureTextEntry={true}
+                                onChangeText={password => this.setState({ password })}
+                            />
+
+                        </View>
 
 
-                    </View>
+                        <TouchableOpacity
+                            style={styles.loginButtonStyle}
+                            activeOpacity={.5}
+                            onPress={this.CheckTextInput}>
 
 
-                    <View
-                        style={styles.inputView1}>
+                            <Text style={styles.buttonWhiteTextStyle}>Sign In</Text>
 
-                        <Image source={require('../images/lock.png')}
-                            style={styles.ImageLockIconStyle} />
+                        </TouchableOpacity>
 
-                        <TextInput
-                            placeholder="Password"
-                            placeholderTextColor="#C3C8D1"
-                            underlineColorAndroid="transparent"
-                            style={styles.input}
-                            secureTextEntry={true}
-                            onChangeText={password => this.setState({ password })}
-                        />
-
-                    </View>
+                        <Text style={styles.forgotpasswordtext} onPress={() => this.props.navigation.navigate('ForgotPassword')}>Forgot Password?</Text>
 
 
-                    <TouchableOpacity
-                        style={styles.loginButtonStyle}
-                        activeOpacity={.5}
-                        onPress={this.CheckTextInput}>
+                        <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+
+                            <View style={{ flexDirection: 'row', flex: .5 }}>
+
+                                <Text style={styles.createnewaccounttext} onPress={() => this.props.navigation.navigate('Signup')}>Don't have an account?</Text>
 
 
-
-                        <Text style={styles.buttonWhiteTextStyle}>Sign In</Text>
-
-                    </TouchableOpacity>
-
-                    <Text style={styles.forgotpasswordtext} onPress={() => this.props.navigation.navigate('ForgotPassword')}>Forgot Password?</Text>
+                                <Text style={styles.signuptext} onPress={() => this.props.navigation.navigate('Signup')}>Sign Up</Text>
 
 
-                    <View style={{ flexDirection: 'column', alignItems: 'center' }}>
-
-                        <View style={{ flexDirection: 'row', flex: .5 }}>
-
-                            <Text style={styles.createnewaccounttext} onPress={() => this.props.navigation.navigate('Signup')}>Don't have an account?</Text>
-
-
-                            <Text style={styles.signuptext} onPress={() => this.props.navigation.navigate('Signup')}>Sign Up</Text>
-
+                            </View>
 
                         </View>
 
                     </View>
 
-                </View>
+                </LinearGradient>
 
 
             </View>
@@ -261,6 +262,8 @@ const styles = StyleSheet.create({
         width: 300,
         height: 50,
         padding: 10,
+        fontSize: 14,
+        marginLeft: 10,
         textAlign: 'left',
         backgroundColor: 'transparent'
     },
@@ -269,6 +272,8 @@ const styles = StyleSheet.create({
         width: 250,
         height: 50,
         padding: 10,
+        fontSize: 14,
+        marginLeft: 10,
         textAlign: 'left',
         backgroundColor: 'transparent'
     },
@@ -285,29 +290,29 @@ const styles = StyleSheet.create({
     },
     buttonWhiteTextStyle: {
         textAlign: 'center',
-        fontSize: 15,
+        fontSize: 16,
         color: 'white',
         alignContent: 'center',
     },
     forgotpasswordtext: {
-        fontSize: RFPercentage(1.8),
+        fontSize: 12,
         textAlign: 'center',
-        color: '#6F737A',
+        color: '#2B2F3B',
         marginRight: 10,
         marginTop: 20,
         alignSelf: 'center'
     },
     createnewaccounttext: {
-        fontSize: RFPercentage(2),
+        fontSize: 15,
         textAlign: 'center',
-        color: '#6F737A',
+        color: '#747A82',
         marginRight: 10,
         alignSelf: 'center'
     },
     signuptext: {
-        fontSize: RFPercentage(2),
+        fontSize: 15,
         textAlign: 'center',
-        color: '#FB3954',
+        color: '#EB2E45',
         marginRight: 10,
         fontWeight: 'bold',
         alignSelf: 'center'
@@ -319,7 +324,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         backgroundColor: 'white',
         width: '90%',
-        marginTop: 100,
+        marginTop: 50,
         borderRadius: 10,
         elevation: 20,
         shadowColor: 'grey',
@@ -344,6 +349,7 @@ const styles = StyleSheet.create({
     ImageIconStyle: {
         height: 25,
         width: 25,
+        marginLeft: 30,
         alignSelf: 'center',
         alignItems: 'center',
         justifyContent: 'center',
@@ -363,6 +369,7 @@ const styles = StyleSheet.create({
     ImageLockIconStyle: {
         height: 32,
         width: 25,
+        marginLeft: 30,
         alignSelf: 'center',
         alignItems: 'center',
         justifyContent: 'center',
@@ -370,8 +377,24 @@ const styles = StyleSheet.create({
     screentitle: {
         color: "white",
         fontSize: 20,
-        textAlign: 'center',
-        fontWeight: 'bold'
+        textAlign: 'center'
+
+    },
+    linearGradient: {
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flex: .4,
+        width: '100%'
+
+    },
+    linearGradientFull: {
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flex: 1,
+        width: '100%'
+
     },
 
 });

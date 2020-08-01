@@ -14,6 +14,8 @@ import CheckBox from 'react-native-check-box'
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 import stringsoflanguages from './locales/stringsoflanguages';
 import AsyncStorage from '@react-native-community/async-storage';
+import LinearGradient from 'react-native-linear-gradient';
+
 
 class SignupActivity extends Component {
 
@@ -72,9 +74,9 @@ class SignupActivity extends Component {
                                     //Check for the password and confirm password
                                     if (this.state.isChecked) {
 
-                                     //   this.showLoading();
+                                        //   this.showLoading();
 
-                                          this.signupcall();
+                                        this.signupcall();
 
                                     } else {
                                         alert(stringsoflanguages.please_accept_terms);
@@ -116,7 +118,7 @@ class SignupActivity extends Component {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                name:  this.state.name,
+                name: this.state.name,
                 email: this.state.email,
                 password: this.state.password,
                 phone: this.state.phone,
@@ -127,7 +129,7 @@ class SignupActivity extends Component {
         })
             .then(response => response.json())
             .then(responseData => {
-               // this.hideLoading();
+                // this.hideLoading();
                 if (responseData.status == '0') {
                     alert(responseData.message);
                 } else {
@@ -141,7 +143,7 @@ class SignupActivity extends Component {
                 console.log('sign up response data:', responseData);
             })
             .catch(error => {
-             //   this.hideLoading();
+                //   this.hideLoading();
                 console.error(error);
             })
 
@@ -155,261 +157,300 @@ class SignupActivity extends Component {
 
             <SafeAreaView style={styles.container}>
 
+
                 <ScrollView>
 
-                    <View style={styles.container}>
+                    <LinearGradient
+                        colors={['#FB3954', '#FA564C', '#F78E3C']}
+                        style={styles.linearGradientFull}
+                        start={{ x: 0, y: 0.5 }}
+                        end={{ x: 1, y: 0.5 }}>
 
 
-                        <View style={{
-                            flexDirection: 'column', alignItems: 'center', justifyContent: 'center', backgroundColor: '#FB4252',
-                            flex: .40, width: '100%'
 
-                        }}>
+                        <View style={styles.container}>
 
-                            <View style={{ flexDirection: 'row' }}>
 
-                                <TouchableOpacity style={{ flex: .20, marginTop: 30 }}
-                                    onPress={() => { this.props.navigation.navigate('Login') }}>
+                            <LinearGradient
+                                colors={['#FB3954', '#FA564C', '#F78E3C']}
+                                style={styles.linearGradient}
+                                start={{ x: 0, y: 0.5 }}
+                                end={{ x: 1, y: 0.5 }}>
 
-                                    <Image source={require('../images/back_icon.png')}
-                                        style={styles.backIconStyle} />
 
-                                </TouchableOpacity>
+                                <View style={{ flexDirection: 'row' }}>
 
-                                <View style={{ flex: .60 }}>
+                                    <TouchableOpacity style={{ flex: .20, marginTop: 30 }}
+                                        onPress={() => { this.props.navigation.navigate('Login') }}>
 
-                                    <Image source={require('../images/logo.png')}
-                                        style={styles.logoStyle} />
+                                        <Image source={require('../images/back_icon.png')}
+                                            style={styles.backIconStyle} />
+
+
+                                    </TouchableOpacity>
+
+                                    <View style={{ flex: .60 }}>
+
+
+
+                                    </View>
+
+
+                                    <View style={{ flex: .20 }}>
+
+
+                                    </View>
 
                                 </View>
 
 
-                                <View style={{ flex: .20 }}>
+
+                                <View style={{ flexDirection: 'row' }}>
+
+                                    <TouchableOpacity style={{ flex: .20, marginTop: 30 }}
+                                        onPress={() => { this.props.navigation.navigate('Login') }}>
+
+
+                                    </TouchableOpacity>
+
+                                    <View style={{ flex: .60 }}>
+
+                                        <Image source={require('../images/logo.png')}
+                                            style={styles.logoStyle} />
+
+                                        <Text style={styles.screentitle}>MENEZES PILATES</Text>
+
+                                    </View>
+
+
+                                    <View style={{ flex: .20 }}>
+
+
+                                    </View>
+
+                                </View>
+
+
+
+
+                            </LinearGradient>
+
+                            <View style={{
+                                flexDirection: 'column', alignItems: 'center', backgroundColor: '#ffffff',
+                                flex: .6, width: '100%', borderTopRightRadius: 30, borderTopLeftRadius: 30
+                            }}>
+
+                                <Text style={styles.signuptitle}>Sign Up</Text>
+
+                                <View
+                                    style={styles.inputView}>
+
+                                    <Image source={require('../images/name_red.png')}
+                                        style={styles.nameIconStyle} />
+
+                                    <TextInput
+                                        placeholder="Name"
+                                        placeholderTextColor="#AEB6C1"
+                                        underlineColorAndroid="transparent"
+                                        style={styles.input}
+                                        onChangeText={name => this.setState({ name })}
+                                    />
 
 
                                 </View>
 
-                            </View>
-
-                            <Text style={styles.screentitle}>MENEZES PILATES</Text>
-
-
-                        </View>
-
-                        <View style={{
-                            flexDirection: 'column', alignItems: 'center', backgroundColor: '#ffffff',
-                            flex: .75, width: '100%', borderTopRightRadius: 30, borderTopLeftRadius: 30, marginTop: 70
-                        }}>
-
-                            <Text style={styles.signuptitle}>Sign Up</Text>
-
-                            <View
-                                style={styles.inputView}>
-
-                                <Image source={require('../images/name_red.png')}
-                                    style={styles.ImageIconStyle} />
-
-                                <TextInput
-                                    placeholder="Name"
-                                    placeholderTextColor="#C3C8D1"
-                                    underlineColorAndroid="transparent"
-                                    style={styles.input}
-                                    onChangeText={name => this.setState({ name })}
-                                />
-
-
-                            </View>
-
-                            {/* {this.state.loading && (
+                                {/* {this.state.loading && (
                                 <View style={styles.loading}>
                                     <ActivityIndicator size="large" color="#ffffff" />
                                 </View>
                             )} */}
 
 
-                            <View
-                                style={styles.inputView1}>
+                                <View
+                                    style={styles.inputView1}>
 
-                                <Image source={require('../images/mail_red.png')}
-                                    style={styles.MailIconStyle} />
-
-                                <TextInput
-                                    placeholder="Email"
-                                    placeholderTextColor="#C3C8D1"
-                                    underlineColorAndroid="transparent"
-                                    style={styles.input}
-                                    onChangeText={email => this.setState({ email })}
-                                />
-
-
-                            </View>
-
-
-                            <View
-                                style={styles.inputView1}>
-
-                                <Image source={require('../images/phone_no.png')}
-                                    style={styles.ImageIconStyle} />
-
-                                <View style={{ flexDirection: 'row' }}>
+                                    <Image source={require('../images/mail_red.png')}
+                                        style={styles.MailIconStyle} />
 
                                     <TextInput
-                                        placeholder="+61"
-                                        placeholderTextColor="#C3C8D1"
+                                        placeholder="Email"
+                                        placeholderTextColor="#AEB6C1"
                                         underlineColorAndroid="transparent"
-                                        keyboardType='number-pad'
-                                        underlineColorAndroid="#ADB6C1"
-                                        editable={false}
-
+                                        style={styles.input}
+                                        onChangeText={email => this.setState({ email })}
                                     />
 
-                                    <Image source={require('../images/down-arrow.png')}
-                                        style={styles.arrowIconStyle} />
 
                                 </View>
 
-                                <TextInput
-                                    placeholder="Phone Number"
-                                    placeholderTextColor="#C3C8D1"
-                                    underlineColorAndroid="transparent"
-                                    style={styles.inputphonenumber}
-                                    keyboardType='number-pad'
-                                    onChangeText={phone => this.setState({ phone })}
-                                />
 
+                                <View
+                                    style={styles.inputView1}>
 
-                            </View>
+                                    <Image source={require('../images/phone_no.png')}
+                                        style={styles.phoneIconStyle} />
 
-                            <View
-                                style={styles.inputView1}>
+                                    <View style={{ flexDirection: 'row' }}>
 
-                                <Image source={require('../images/name_red.png')}
-                                    style={styles.ImageIconStyle} />
+                                        <TextInput
+                                            placeholder="+61"
+                                            placeholderTextColor="#AEB6C1"
+                                            underlineColorAndroid="transparent"
+                                            keyboardType='number-pad'
+                                            underlineColorAndroid="#ADB6C1"
+                                            editable={false}
 
-                                <TextInput
-                                    placeholder="Gender"
-                                    placeholderTextColor="#C3C8D1"
-                                    underlineColorAndroid="transparent"
-                                    style={styles.input}
-                                    onChangeText={gender => this.setState({ gender })}
-                                />
+                                        />
 
+                                        <Image source={require('../images/down-arrow.png')}
+                                            style={styles.arrowIconStyle} />
 
-                            </View>
+                                    </View>
 
-                            <View
-                                style={styles.inputView1}>
-
-                                <Image source={require('../images/location_red.png')}
-                                    style={styles.locationIconStyle} />
-
-                                <TextInput
-                                    placeholder="Location"
-                                    placeholderTextColor="#C3C8D1"
-                                    underlineColorAndroid="transparent"
-                                    style={styles.input}
-                                    onChangeText={location => this.setState({ location })}
-                                />
-
-
-                            </View>
-
-                            <View
-                                style={styles.inputView1}>
-
-                                <Image source={require('../images/lock.png')}
-                                    style={styles.ImageLockIconStyle} />
-
-                                <TextInput
-                                    placeholder="Password"
-                                    placeholderTextColor="#C3C8D1"
-                                    underlineColorAndroid="transparent"
-                                    style={styles.input}
-                                    secureTextEntry={true}
-                                    onChangeText={password => this.setState({ password })}
-                                />
-
-                            </View>
-
-                            <View
-                                style={styles.inputView1}>
-
-                                <Image source={require('../images/lock.png')}
-                                    style={styles.ImageLockIconStyle} />
-
-                                <TextInput
-                                    placeholder="Confirm Password"
-                                    placeholderTextColor="#C3C8D1"
-                                    underlineColorAndroid="transparent"
-                                    style={styles.input}
-                                    secureTextEntry={true}
-                                    onChangeText={confirmPassword => this.setState({ confirmPassword })}
-                                />
-
-                            </View>
-
-                            <View style={{
-                                flexDirection: 'row', alignItems: 'center', textAlign: 'center', alignSelf: 'center',
-                                marginTop: 15
-                            }}>
-
-                                <CheckBox
-                                    uncheckedCheckBoxColor={'#FB3954'}
-                                    checkedCheckBoxColor={'#FB3954'}
-                                    value={this.state.isChecked}
-                                    onValueChange={() => this.setState({ isChecked: !this.state.isChecked })}
-                                    onClick={() => {
-                                        this.setState({ isChecked: !this.state.isChecked })
-                                        if (!this.state.isChecked) {
-
-                                        }
-
-                                    }}
-                                    isChecked={this.state.isChecked}
-                                />
-
-                                <Text
-                                    style={{
-                                        marginTop: 5, color: '#565F70', marginHorizontal: 5, textAlign: 'center',
-                                        borderBottomWidth: 1, borderColor: '#C7E8F2'
-                                    }}
-                                    onPress={() => this.props.navigation.navigate('TermsCondition')}
-
-
-                                >Accept terms and conditions</Text>
-
-
-                            </View>
-
-
-
-                            <TouchableOpacity
-                                style={styles.loginButtonStyle}
-                                activeOpacity={.5}
-                                onPress={this.CheckTextInput}>
-
-
-
-                                <Text style={styles.buttonWhiteTextStyle}>Sign Up</Text>
-
-                            </TouchableOpacity>
-
-
-
-
-                            <View style={{ flexDirection: 'column', alignItems: 'center' }}>
-
-                                <View style={{ flexDirection: 'row', flex: .5 }}>
+                                    <TextInput
+                                        placeholder="Phone Number"
+                                        placeholderTextColor="#AEB6C1"
+                                        underlineColorAndroid="transparent"
+                                        style={styles.inputphonenumber}
+                                        keyboardType='number-pad'
+                                        onChangeText={phone => this.setState({ phone })}
+                                    />
 
 
                                 </View>
 
+                                <View
+                                    style={styles.inputView1}>
+
+                                    <Image source={require('../images/name_red.png')}
+                                        style={styles.genderIconStyle} />
+
+                                    <TextInput
+                                        placeholder="Gender"
+                                        placeholderTextColor="#AEB6C1"
+                                        underlineColorAndroid="transparent"
+                                        style={styles.input}
+                                        onChangeText={gender => this.setState({ gender })}
+                                    />
+
+
+                                </View>
+
+                                <View
+                                    style={styles.inputView1}>
+
+                                    <Image source={require('../images/location_red.png')}
+                                        style={styles.locationIconStyle} />
+
+                                    <TextInput
+                                        placeholder="Location"
+                                        placeholderTextColor="#AEB6C1"
+                                        underlineColorAndroid="transparent"
+                                        style={styles.input}
+                                        onChangeText={location => this.setState({ location })}
+                                    />
+
+
+                                </View>
+
+                                <View
+                                    style={styles.inputView1}>
+
+                                    <Image source={require('../images/lock.png')}
+                                        style={styles.ImageLockIconStyle} />
+
+                                    <TextInput
+                                        placeholder="Password"
+                                        placeholderTextColor="#AEB6C1"
+                                        underlineColorAndroid="transparent"
+                                        style={styles.input}
+                                        secureTextEntry={true}
+                                        onChangeText={password => this.setState({ password })}
+                                    />
+
+                                </View>
+
+                                <View
+                                    style={styles.inputView1}>
+
+                                    <Image source={require('../images/lock.png')}
+                                        style={styles.ImageLockIconStyle} />
+
+                                    <TextInput
+                                        placeholder="Confirm Password"
+                                        placeholderTextColor="#AEB6C1"
+                                        underlineColorAndroid="transparent"
+                                        style={styles.input}
+                                        secureTextEntry={true}
+                                        onChangeText={confirmPassword => this.setState({ confirmPassword })}
+                                    />
+
+                                </View>
+
+                                <View style={{
+                                    flexDirection: 'row',
+                                    marginTop: 15
+                                }}>
+
+                                    <CheckBox
+                                        uncheckedCheckBoxColor={'#FB3954'}
+                                        checkedCheckBoxColor={'#FB3954'}
+                                        value={this.state.isChecked}
+                                        onValueChange={() => this.setState({ isChecked: !this.state.isChecked })}
+                                        onClick={() => {
+                                            this.setState({ isChecked: !this.state.isChecked })
+                                            if (!this.state.isChecked) {
+
+                                            }
+
+                                        }}
+                                        isChecked={this.state.isChecked}
+                                    />
+
+                                    <Text
+                                        style={{
+                                            marginTop: 5, color: '#06142D', marginHorizontal: 5,
+                                            borderBottomWidth: 1, borderColor: '#C7E8F2', fontSize: 12
+                                        }}
+                                        onPress={() => this.props.navigation.navigate('TermsCondition')}
+
+
+                                    >Accept terms and conditions</Text>
+
+
+                                </View>
+
+
+
+                                <TouchableOpacity
+                                    style={styles.loginButtonStyle}
+                                    activeOpacity={.5}
+                                    onPress={this.CheckTextInput}>
+
+
+
+                                    <Text style={styles.buttonWhiteTextStyle}>Sign Up</Text>
+
+                                </TouchableOpacity>
+
+
+
+
+                                <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+
+                                    <View style={{ flexDirection: 'row', flex: .5 }}>
+
+
+                                    </View>
+
+                                </View>
+
                             </View>
+
 
                         </View>
 
-
-                    </View>
+                    </LinearGradient>
 
                 </ScrollView>
 
@@ -423,7 +464,7 @@ class SignupActivity extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#FB4252'
+      
     },
     loading: {
         left: 0,
@@ -518,46 +559,67 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 2, height: 2 },
         shadowOpacity: 1
     },
-    ImageIconStyle: {
-        height: 30,
-        width: 25,
+    nameIconStyle: {
+        height: 24,
+        width: 20,
+        marginLeft: 15,
+        alignSelf: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    phoneIconStyle: {
+        height: 21,
+        width: 21,
+        marginLeft: 15,
+        alignSelf: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    genderIconStyle: {
+        height: 20,
+        width: 17,
+        marginLeft: 15,
         alignSelf: 'center',
         alignItems: 'center',
         justifyContent: 'center',
     },
     locationIconStyle: {
-        height: 34,
-        width: 25,
+        height: 22,
+        width: 15,
+        marginLeft: 15,
         alignSelf: 'center',
         alignItems: 'center',
         justifyContent: 'center',
     },
     MailIconStyle: {
-        height: 25,
-        width: 30,
+        height: 17,
+        width: 22,
+        marginLeft: 15,
         alignSelf: 'center',
         alignItems: 'center',
         justifyContent: 'center',
     },
     ImageLockIconStyle: {
-        height: 32,
-        width: 25,
+        height: 24,
+        width: 18,
+        marginLeft: 15,
         alignSelf: 'center',
         alignItems: 'center',
         justifyContent: 'center',
     },
     screentitle: {
         color: "white",
-        fontSize: 20,
+        fontSize: 18,
         textAlign: 'center',
-        fontWeight: 'bold'
+        marginBottom: 20,
+
     },
     signuptitle: {
-        color: '#3F434E',
-        fontSize: 20,
+        color: '#2B2F3B',
+        fontSize: 21,
         marginTop: 10,
         textAlign: 'center',
-        fontWeight: 'bold'
+
     },
     backIconStyle: {
         height: 25,
@@ -584,8 +646,23 @@ const styles = StyleSheet.create({
         width: 250,
         height: 50,
         padding: 10,
+        fontSize: 14,
         textAlign: 'left',
         backgroundColor: 'transparent'
+    },
+    linearGradient: {
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flex: .4,
+        width: '100%'
+
+    },
+    linearGradientFull: {
+        flexDirection: 'column',
+        flex: 1,
+        width: '100%'
+
     },
 
 });

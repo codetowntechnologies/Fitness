@@ -97,12 +97,12 @@ class WhoWeAreActivity extends Component {
                     </TouchableOpacity>
 
 
-                    <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center', flex: .60 }}
+                    <View style={{ alignItems: 'center', justifyContent: 'center', flex: .60 }}
                     >
 
                         <Text style={styles.screentitle}>WHO WE ARE</Text>
 
-                    </TouchableOpacity>
+                    </View>
 
                     <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center', flex: .20 }}
                     >
@@ -187,8 +187,7 @@ const styles = StyleSheet.create({
         height: 50,
         width: 50,
         alignSelf: 'center',
-        alignItems: 'center',
-        justifyContent: 'center',
+       
     },
     textblacktextstyle: {
         fontSize: 15,

@@ -13,6 +13,8 @@ import {
 } from 'react-native';
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 import stringsoflanguages from '../components/locales/stringsoflanguages';
+import AsyncStorage from '@react-native-community/async-storage';
+
 var videoId;
 console.disableYellowBox = true;
 
@@ -23,14 +25,14 @@ function Item({ item }) {
 
             <View style={styles.similarvideoBottomView}>
 
-                <View style={{ flexDirection: 'row', flex: .60 }}>
+                <View style={{ flexDirection: 'row', flex: .50 }}>
 
-                    <Text style={styles.textpinktextstyle}>{item.id}.</Text>
+                    <Text style={styles.textpinktextstyle}>{item.sr_nu}.</Text>
 
                     <Text style={styles.textpinktextstyle}>{item.name}</Text>
                 </View>
 
-                <View style={{ flexDirection: 'row', flex: .40, justifyContent: 'center', alignItems: 'flex-end' }}>
+                <View style={{ flexDirection: 'row', flex: .50, justifyContent: 'center' }}>
 
                     <Text style={styles.textpinktextstyle}> ${item.price}/{item.monthname}</Text>
 
@@ -59,7 +61,9 @@ class DashboardDetailActivity extends Component {
             image: '',
             description: '',
             price: '',
-            monthname: ''
+            monthname: '',
+            userId: '',
+            subscribe_status:''
         };
     }
 
@@ -81,10 +85,19 @@ class DashboardDetailActivity extends Component {
         const { navigation } = this.props;
         videoId = navigation.getParam('id', 'no-id');
 
-        console.log("VIDEO ID===" + videoId)
-        //   this.showLoading();
-        this.videoDetail();
-        this.similarvideolist();
+        AsyncStorage.getItem('@user_id').then((userId) => {
+            if (userId) {
+                this.setState({ userId: userId });
+                console.log("user id ====" + this.state.userId);
+                console.log("VIDEO ID===" + videoId)
+                //   this.showLoading();
+               this.videoDetail();
+               this.similarvideolist();
+            }
+        });
+
+
+
     }
 
     ListEmpty = () => {
@@ -112,7 +125,8 @@ class DashboardDetailActivity extends Component {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                id: videoId
+                id: videoId,
+                user_id: this.state.userId
             }),
         })
             .then(response => response.json())
@@ -131,6 +145,20 @@ class DashboardDetailActivity extends Component {
 
                     this.setState({ price: responseData.data.price });
                     this.setState({ monthname: responseData.data.monthname });
+
+                   // console.log("responseData.subscribe_status=" + responseData.subscribe_status)
+
+                    if(responseData.subscribe_status=="Yes")
+                    {
+                        this.setState({ subscribe_status: true });
+                    }else
+                    {
+                        this.setState({ subscribe_status: false });
+                    }
+                 
+
+
+                    
 
 
 
@@ -203,14 +231,14 @@ class DashboardDetailActivity extends Component {
                     </TouchableOpacity>
 
 
-                    <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center', flex: .80 }} >
+                    <View style={{ alignItems: 'center', justifyContent: 'center', flex: .80 }} >
 
                         <Text style={styles.screentitle}>MENEZES PILATES</Text>
 
-                    </TouchableOpacity>
+                 </View>
 
 
-                    <TouchableOpacity style={{
+                    <View style={{
                         flex: .10
                     }}
                     >
@@ -219,7 +247,7 @@ class DashboardDetailActivity extends Component {
                             style={styles.MenuHomeUserIconStyle} />
 
 
-                    </TouchableOpacity>
+           </View>
 
 
                 </View>
@@ -258,10 +286,9 @@ class DashboardDetailActivity extends Component {
                         <View style={{ flexDirection: 'row', flex: 1 }}>
 
                             <View style={{
-                                flexDirection: 'row', marginTop: 2, padding: 10, backgroundColor: '#FB3954', flex: .5,
-                                justifyContent: 'center', alignItems: 'center', margin: 15, borderRadius: 5
-                            }}
-                            >
+                                flexDirection: 'row', backgroundColor: '#FB3954', flex: .4, padding: 5,
+                                justifyContent: 'center', alignItems: 'center', marginLeft: 5, marginRight: 5, height: 40, borderRadius: 5
+                            }}>
 
 
                                 <Image
@@ -270,7 +297,7 @@ class DashboardDetailActivity extends Component {
 
 
                                 <Text style={{
-                                    color: 'white', marginLeft: 5, fontSize: RFPercentage(1.7), textAlign: 'center',
+                                    color: 'white', fontSize: RFPercentage(3), textAlign: 'center',
                                     marginRight: 5
                                 }}>
                                     {stringsoflanguages.play}</Text>
@@ -278,10 +305,18 @@ class DashboardDetailActivity extends Component {
 
                             </View>
 
+                            <View style={{
+                                flexDirection: 'row', padding: 5,
+                                justifyContent: 'center', alignItems: 'center', height: 40, borderRadius: 5
+                            }}>
+
+                            </View>
+
+            
 
                             <View style={{
-                                flexDirection: 'row', marginTop: 2, padding: 10, flex: .5, backgroundColor: '#ADB6C1',
-                                justifyContent: 'center', alignItems: 'center', margin: 15, borderRadius: 5
+                                flexDirection: 'row', flex: .5, backgroundColor: this.state.subscribe_status?'#ADB6C1':'#FB3954' , padding: 5,
+                                justifyContent: 'center', alignItems: 'center', height: 40, borderRadius: 5, marginRight: 15
                             }}>
 
 
@@ -289,14 +324,22 @@ class DashboardDetailActivity extends Component {
                                     style={styles.StyleSubscribedVideo}
                                     source={require('../images/my_subscription.png')} />
 
+{
+          this.state.subscribe_status ?
+          <Text style={{
+            color: 'white', marginLeft: 5, fontSize: RFPercentage(3), textAlign: 'center',
+            marginRight: 5
+        }}>
+            {stringsoflanguages.subscribed}</Text>
 
+            :      <Text style={{
+                color: 'white', marginLeft: 5, fontSize: RFPercentage(3), textAlign: 'center',
+                marginRight: 5
+            }}>
+                {stringsoflanguages.subscribe}</Text>
 
-                                <Text style={{
-                                    color: 'white', marginLeft: 5, fontSize: RFPercentage(1.7), textAlign: 'center',
-                                    marginRight: 5
-                                }}>
-                                    {stringsoflanguages.subscribed}</Text>
-
+        }
+                           
 
                             </View>
 
@@ -306,7 +349,7 @@ class DashboardDetailActivity extends Component {
 
                         <View style={{ flexDirection: 'row' }}>
 
-                            <Text style={styles.textblacktextstyle}>Description</Text>
+                            <Text style={styles.vide_discription_style}>Description</Text>
 
                             <Image source={require('../images/down_arrow.png')}
                                 style={styles.downArrowStyle} />
@@ -337,7 +380,7 @@ class DashboardDetailActivity extends Component {
 
                         renderItem={({ item }) => (
 
-                            <TouchableWithoutFeedback onPress={() => this.actionOnRow(item)}>
+                            <TouchableWithoutFeedback>
 
                                 <View>
                                     <Item item={item}
@@ -457,8 +500,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     listItem: {
-        marginLeft: 5,
-        marginRight: 5,
         flex: 1,
         alignSelf: "center",
         flexDirection: "column",
@@ -581,19 +622,10 @@ const styles = StyleSheet.create({
     },
     videoBottomView: {
         height: 50,
-        width: 400,
-        padding: 10,
         flexDirection: 'row',
         alignItems: 'center'
     },
-    textpinktextstyle: {
-        fontSize: 15,
-        fontWeight: 'bold',
-        color: '#FB3954',
-        textAlign: 'right',
-        marginRight: 3,
-        marginTop: 8
-    },
+
     playiconstyle: {
         height: 70,
         width: 70,
@@ -658,7 +690,11 @@ const styles = StyleSheet.create({
         fontSize: 15,
         color: '#06142D',
         marginTop: 8,
-        marginLeft: 5,
+    },
+    vide_discription_style: {
+        fontSize: 15,
+        color: '#06142D',
+        marginTop: 8,
         marginLeft: 10
     },
     textpinktextstyle: {
@@ -666,7 +702,8 @@ const styles = StyleSheet.create({
         color: '#FB3954',
         marginTop: 8,
         marginLeft: 5,
-        marginLeft: 10
+        marginLeft: 10,
+        marginRight: 49
     },
     description_text_color: {
         color: "#999A9A",
@@ -677,7 +714,7 @@ const styles = StyleSheet.create({
     StylePlayIcon: {
         width: 25,
         height: 25,
-        marginRight: 15,
+        marginRight: 25,
         alignSelf: 'center',
         alignItems: 'center',
         justifyContent: 'center',
@@ -685,6 +722,7 @@ const styles = StyleSheet.create({
     StyleSubscribedVideo: {
         width: 25,
         height: 25,
+        marginLeft: 20,
         marginRight: 15,
         tintColor: 'white',
         alignSelf: 'center',

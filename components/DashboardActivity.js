@@ -349,8 +349,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     listItem: {
-        marginLeft: 5,
-        marginRight: 5,
         marginTop: 10,
         flex: 1,
         alignSelf: "center",
@@ -497,7 +495,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#FB3954',
         textAlign: 'right',
-        marginRight: 3
+        marginRight: 10
     },
     playiconstyle: {
         height: 70,
