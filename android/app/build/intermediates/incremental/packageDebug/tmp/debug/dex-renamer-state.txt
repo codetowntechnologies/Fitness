@@ -1,0 +1,14 @@
+<<<<<<< HEAD
+#Wed Sep 09 17:22:56 IST 2020
+=======
+#Sat Aug 29 21:38:55 IST 2020
+>>>>>>> 95be5027a77c6e45f3c3c40099701e7faa5b8255
+path.2=classes3.dex
+path.1=classes2.dex
+path.0=classes.dex
+renamed.2=classes3.dex
+renamed.1=classes2.dex
+renamed.0=classes.dex
+base.2=E\:\\ReactNAtive\\fitness\\Fitness\\android\\app\\build\\intermediates\\dex\\debug\\mergeDexDebug\\out\\classes3.dex
+base.1=E\:\\ReactNAtive\\fitness\\Fitness\\android\\app\\build\\intermediates\\dex\\debug\\mergeDexDebug\\out\\classes2.dex
+base.0=E\:\\ReactNAtive\\fitness\\Fitness\\android\\app\\build\\intermediates\\dex\\debug\\mergeDexDebug\\out\\classes.dex

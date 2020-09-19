@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "390094917824",
+    "firebase_url": "https://yys-userapp.firebaseio.com",
+    "project_id": "menezes",
+    "storage_bucket": "yys-userapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:390094917824:android:91e3cc64da7d255a3a5d25",
+        "android_client_info": {
+          "package_name": "com.menezes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "390094917824-nqvu0dbd77nf0aojcb0v34ct533gg85m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBaCW7Bo-IzuRlV4Bdc8jKto4TbSMjD4rU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "390094917824-nqvu0dbd77nf0aojcb0v34ct533gg85m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

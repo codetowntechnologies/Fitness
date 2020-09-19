@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_web_client_id" translatable="false">390094917824-nqvu0dbd77nf0aojcb0v34ct533gg85m.apps.googleusercontent.com</string>
+    <string name="firebase_database_url" translatable="false">https://yys-userapp.firebaseio.com</string>
+    <string name="gcm_defaultSenderId" translatable="false">390094917824</string>
+    <string name="google_api_key" translatable="false">AIzaSyBaCW7Bo-IzuRlV4Bdc8jKto4TbSMjD4rU</string>
+    <string name="google_app_id" translatable="false">1:390094917824:android:91e3cc64da7d255a3a5d25</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyBaCW7Bo-IzuRlV4Bdc8jKto4TbSMjD4rU</string>
+    <string name="google_storage_bucket" translatable="false">yys-userapp.appspot.com</string>
+    <string name="project_id" translatable="false">menezes</string>
+</resources>

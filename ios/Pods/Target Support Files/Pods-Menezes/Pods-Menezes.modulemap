@@ -1,0 +1,6 @@
+module Pods_Menezes {
+  umbrella header "Pods-Menezes-umbrella.h"
+
+  export *
+  module * { export * }
+}

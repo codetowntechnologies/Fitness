@@ -1,0 +1,4 @@
+# Referenced at E:\ReactNAtive\fitness\Fitness\android\app\build\intermediates\merged_manifests\debug\AndroidManifest.xml:46
+-keep class androidx.core.app.CoreComponentFactory { <init>(); }
+# Referenced at E:\ReactNAtive\fitness\Fitness\android\app\build\intermediates\merged_manifests\debug\AndroidManifest.xml:46
+-keep class com.menezes.MainApplication { <init>(); }

@@ -1,0 +1,6 @@
+module Pods_Menezes_MenezesTests {
+  umbrella header "Pods-Menezes-MenezesTests-umbrella.h"
+
+  export *
+  module * { export * }
+}
