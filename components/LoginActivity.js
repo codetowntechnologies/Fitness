@@ -7,11 +7,21 @@ import {
     TouchableOpacity,
     Image,
     ActivityIndicator,
+    Platform,
+    SafeAreaView
 } from 'react-native';
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 import stringsoflanguages from './locales/stringsoflanguages';
 import AsyncStorage from '@react-native-community/async-storage';
 import LinearGradient from 'react-native-linear-gradient';
+import Toast from 'react-native-simple-toast';
+import Modal from 'react-native-modal';
+
+
+
+console.disableYellowBox = true;
+const APP_POPUP_LOGO = require('../images/Group.png');
+
 
 class LoginActivity extends Component {
 
@@ -19,13 +29,32 @@ class LoginActivity extends Component {
         super(props);
         this.logincall = this.logincall.bind(this);
         this.state = {
-            baseUrl: 'https://digimonk.co/fitness/api/Api/login',
+            baseUrl: 'http://3.25.67.165/api/Api/login',
             phonenumber: '',
             password: '',
+            isModalVisible: false,
+            isUsernameVisible: false,
+            isModalPopupVisible: false,      
+            textOnModel:''     
         };
     }
+    toggleModal = () => {
+        this.setState({ isModalVisible: !this.state.isModalVisible });
+    };
 
+    togglePopup = () => {
+        this.setState({ isModalPopupVisible: !this.state.isModalPopupVisible });
+    };
+    closequestionlogPopup = () => {
 
+        this.setState({ isModalPopupVisible: false });
+
+        // this.setState({ questionlogApicalled: true }),
+        //     this.RBSheetConfirmDetails.close();
+    };
+    loading() {
+        this.setState({ spinner: true });
+      }
     showLoading() {
         this.setState({ loading: true });
     }
@@ -55,10 +84,14 @@ class LoginActivity extends Component {
                 this.logincall();
 
             } else {
-                alert(stringsoflanguages.please_enter_password);
+               // Toast.show(stringsoflanguages.please_enter_password,Toast.LONG);
+               this.setState({isModalPopupVisible:true});
+               this.setState({textOnModel:stringsoflanguages.please_enter_password})
             }
         } else {
-            alert(stringsoflanguages.please_enter_phone_number);
+            this.setState({isModalPopupVisible:true});
+               this.setState({textOnModel:stringsoflanguages.please_enter_phone_number})
+            // Toast.show(stringsoflanguages.please_enter_phone_number,Toast.LONG);
         }
     };
 
@@ -81,7 +114,9 @@ class LoginActivity extends Component {
             .then(responseData => {
                 this.hideLoading();
                 if (responseData.status == '0') {
-                    alert(responseData.message);
+                    this.setState({isModalPopupVisible:true});
+                    this.setState({textOnModel:responseData.message})
+                   // Toast.show(responseData.message,Toast.LONG);
                 } else {
                     this.saveLoginUserData(responseData);
                 }
@@ -130,7 +165,7 @@ class LoginActivity extends Component {
                         start={{ x: 0, y: 0.5 }}
                         end={{ x: 1, y: 0.5 }}>
 
-                        <Image source={require('../images/logo.png')}
+                        <Image source={require('../images/Group.png')}
                             style={styles.logoStyle} />
 
                         <Text style={styles.screentitle}>MENEZES PILATES</Text>
@@ -139,7 +174,7 @@ class LoginActivity extends Component {
 
                     <View style={{
                         flexDirection: 'column', alignItems: 'center', backgroundColor: '#ffffff',
-                        flex: .6, width: '100%', borderTopRightRadius: 30, borderTopLeftRadius: 30
+                        flex: .6, width: '100%', borderTopRightRadius: 30, borderTopLeftRadius: 30,fontFamily: Platform.OS === 'ios' ? 'Montserrat' : 'sans-serif'
                     }}>
 
                         <View
@@ -172,6 +207,7 @@ class LoginActivity extends Component {
                                 underlineColorAndroid="transparent"
                                 style={styles.inputphonenumber}
                                 keyboardType='number-pad'
+                                maxLength={10}
                                 onChangeText={phonenumber => this.setState({ phonenumber })}
                             />
 
@@ -196,7 +232,59 @@ class LoginActivity extends Component {
 
                         </View>
 
+                        <Modal
+                        isVisible={this.state.isModalPopupVisible}
+                        style={styles.ispopupmodalvisible}
+                        hasBackdrop={true}
+                        cancelable={false}
+                        animationInTiming={300}
+                        animationOutTiming={300}
+                        backdropTransitionInTiming={300}
+                        backdropTransitionOutTiming={300}
+                    >
 
+
+                        <SafeAreaView style={{
+                            flexDirection: 'column', backgroundColor: 'white', borderTopLeftRadius: 10,
+                            borderTopRightRadius: 10, borderBottomLeftRadius: 10, borderBottomRightRadius: 10
+                            , marginLeft: 20, marginBottom: 150, marginRight: 20, marginTop: 150
+
+                        }}>
+
+                            <View style={{ flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: 50 }}>
+
+
+                                <TouchableOpacity style={{ flex: .40, alignItems: 'flex-start', justifyContent: 'center' }}
+                                    onPress={() => { }} >
+
+                                    <Image
+                                        source={APP_POPUP_LOGO}
+                                        style={{ width: 100, height: 100, borderRadius: 100 / 2, marginLeft: 10, borderWidth: 2, borderColor: 'white' }}
+                                    />
+
+                                </TouchableOpacity>
+
+                            </View>
+
+                            <Text style={styles.appnamestyle}>MENEZES PILATES</Text>
+
+                            <Text style={styles.popupmsgstyle}>{this.state.textOnModel}</Text>
+
+                            <TouchableOpacity
+                                style={styles.SubmitButtonStyle}
+                                activeOpacity={.5}
+                                onPress={this.closequestionlogPopup}>
+
+                                <Text style={styles.fbText}
+                                >{stringsoflanguages.ok}</Text>
+
+                            </TouchableOpacity>
+
+
+                        </SafeAreaView>
+
+
+                    </Modal>
                         <TouchableOpacity
                             style={styles.loginButtonStyle}
                             activeOpacity={.5}
@@ -307,7 +395,8 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: '#747A82',
         marginRight: 10,
-        alignSelf: 'center'
+        alignSelf: 'center',
+        fontFamily: Platform.OS === 'ios' ? 'Montserrat' : 'sans-serif'
     },
     signuptext: {
         fontSize: 15,
@@ -315,7 +404,8 @@ const styles = StyleSheet.create({
         color: '#EB2E45',
         marginRight: 10,
         fontWeight: 'bold',
-        alignSelf: 'center'
+        alignSelf: 'center',
+        fontFamily: Platform.OS === 'ios' ? 'Montserrat' : 'sans-serif'
     },
 
     inputView: {
@@ -365,6 +455,58 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         alignItems: 'center',
         justifyContent: 'center',
+        width: 100,
+        height: 110
+    },
+    scrollViewContainer: {
+        backgroundColor: '#F0F5FE'
+
+    },
+    appnamestyle: {
+        marginTop: 50,
+        color: "#626262",
+        textAlign: 'center',
+        fontWeight: 'bold',
+        fontSize: RFPercentage(4)
+    },
+    popupmsgstyle: {
+        marginTop: 50,
+        color: "#626262",
+        textAlign: 'center',
+        fontSize: RFPercentage(3)
+    },
+    ispopupmodalvisible: {
+        alignItems: undefined,
+        justifyContent: undefined, // This is the important style you need to set
+    },
+    SubmitButtonStyle: {
+        marginTop: 50,
+        width: 300,
+        height: 40,
+        padding: 10,
+        marginBottom: 50,
+        backgroundColor: '#FB3954',
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignSelf: 'center',
+        // Setting up View inside component align horizontally center.
+        alignItems: 'center',
+        fontWeight: 'bold',
+    },
+    fbText: {
+        textAlign: 'center',
+        fontSize: 15,
+        color: 'white',
+        alignContent: 'center',
+        fontWeight: 'bold'
+    },
+    forgotpasswordtext: {
+        fontSize: RFPercentage(1.8),
+        textAlign: 'center',
+        color: '#6F737A',
+        marginRight: 10,
+        marginTop: 20,
+        alignSelf: 'center'
     },
     ImageLockIconStyle: {
         height: 32,
@@ -377,7 +519,8 @@ const styles = StyleSheet.create({
     screentitle: {
         color: "white",
         fontSize: 20,
-        textAlign: 'center'
+        textAlign: 'center',
+        fontFamily: Platform.OS === 'ios' ? 'Montserrat' : 'sans-serif'
 
     },
     linearGradient: {

@@ -23,8 +23,8 @@ class ForgetOtpActivity extends Component {
         this.resendotp = this.resendotp.bind(this);
         this.verifyotp = this.verifyotp.bind(this);
         this.state = {
-            otpUrl: 'https://digimonk.co/fitness/api/Api/forgot_password',
-            verifyOtpUrl: 'https://digimonk.co/fitness/api/Api/verify',
+            otpUrl: 'http://3.25.67.165/api/Api/forgot_password',
+            verifyOtpUrl: 'http://3.25.67.165/api/Api/verify',
             otpcode: '',
             userId: ''
         };

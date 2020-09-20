@@ -4,17 +4,21 @@ import {
     View,
     Text,
     Image,
-    ActivityIndicator
+    ActivityIndicator,
+    ImageBackground
 } from 'react-native';
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 import AsyncStorage from '@react-native-community/async-storage';
+
+
+import stringsoflanguages from '../components/locales/stringsoflanguages';
 
 class SplashActivity extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-         
+
         };
     }
 
@@ -43,7 +47,7 @@ class SplashActivity extends Component {
     }
 
     load = () => {
-      
+
         this.showLoading();
 
         this.timeoutHandle = setTimeout(() => {
@@ -53,9 +57,9 @@ class SplashActivity extends Component {
                 if (isLogin == undefined || isLogin == "0") {
                     this.props.navigation.navigate('Login')
                 } else if (isLogin == "1") {
-                   this.props.navigation.navigate('Dashboard')
-               }
-           });
+                    this.props.navigation.navigate('Dashboard')
+                }
+            });
 
 
         }, 4000);
@@ -66,7 +70,26 @@ class SplashActivity extends Component {
         return (
             <View style={styles.container}>
 
-                <Image source={require('../images/splash_bg.png')} />
+                <ImageBackground source={require('../images/splashScreen.png')}
+                    style={styles.image} >
+                    <View style={{justifyContent:'center',alignItems:'center'}}>
+                   <View style={{top:120,justifyContent:'center',backgroundColor:'#fff',width:300,height:65,shadowColor:'lightgray',elevation:15,shadowOpacity:0.8}}>
+                       <Text style={styles.displayName}>MENEZES METHOD</Text>
+                   <Text style={styles.titleName}>"A 
+                  <Text style={styles.innerText}> step </Text> 
+                   beyond Pilates"</Text>
+                   </View>
+</View>
+                    {this.state.loading && (
+                        <View style={styles.loading}>
+                            <ActivityIndicator size="large" color="#FB3954" />
+
+
+                        </View>
+                    )}
+
+
+                </ImageBackground>
 
             </View>
         );
@@ -76,10 +99,9 @@ class SplashActivity extends Component {
 
 const styles = StyleSheet.create({
     container: {
+
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'white'
+        flexDirection: "column"
 
     },
     imgBackground: {
@@ -91,7 +113,7 @@ const styles = StyleSheet.create({
 
         left: 0,
         right: 0,
-        top: 0,
+        top: 200,
         bottom: 0,
         opacity: 0.5,
         justifyContent: 'center',
@@ -103,6 +125,30 @@ const styles = StyleSheet.create({
         color: '#FFC33B',
         fontWeight: 'bold'
     },
+    image: {
+        flex: 1,
+        resizeMode: "cover",
+        justifyContent: "center"
+    },
+    loaderImage: {
+
+        justifyContent: "center"
+    },
+    displayName: {
+        top:3,
+        fontSize: 23,
+        fontWeight:'400',
+        textAlign: 'center',
+        justifyContent: 'center'
+    },
+    titleName : {
+        textAlign: 'center',
+        top: 5,
+        fontStyle: 'italic'
+    },
+    innerText: {
+        fontWeight: 'bold'
+    }
 });
 
 export default SplashActivity;

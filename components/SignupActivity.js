@@ -8,14 +8,43 @@ import {
     Image,
     ScrollView,
     SafeAreaView,
-    ActivityIndicator
+    ActivityIndicator,
+    Dimensions
 } from 'react-native';
-import CheckBox from 'react-native-check-box'
+import CheckBox from 'react-native-check-box';
+import Toast from 'react-native-simple-toast';
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 import stringsoflanguages from './locales/stringsoflanguages';
 import AsyncStorage from '@react-native-community/async-storage';
 import LinearGradient from 'react-native-linear-gradient';
+import RNPickerSelect from 'react-native-picker-select';
+import Modal from 'react-native-modal';
+import _ from 'lodash';
+import {
+    Picker,
+    KeyboardAwareScrollView,
+    TextField,
+    Colors,
+  } from 'react-native-ui-lib';
 
+const width = Dimensions.get('window').width;
+const height=Dimensions.get('window').height;
+
+const optionValue = [
+    {label: 'Male', value: 'Male'},
+    {label: 'Female', value: 'Female'},
+    {label: 'Other', value: 'Other'},
+  ];
+
+const placeholder = {
+    label: 'Select your Gender',
+    value: null,
+    color: '#9EA0A4',
+  };
+  
+console.disableYellowBox = true;
+const APP_POPUP_LOGO = require('../images/Group.png');
+var icon;
 
 class SignupActivity extends Component {
 
@@ -23,15 +52,21 @@ class SignupActivity extends Component {
         super(props);
         this.signupcall = this.signupcall.bind(this);
         this.state = {
-            baseUrl: 'https://digimonk.co/fitness/api/Api/register',
+            baseUrl: 'http://3.25.67.165/api/Api/register',
             name: '',
             email: '',
             phone: '',
             password: '',
             confirmPassword: '',
-            gender: '',
+            gender: 'Select your Gender',
             location: '',
-            device_token: ''
+            device_token: '',
+            editable: false,
+            user: '',
+            isModalVisible: false,
+            isUsernameVisible: false,
+            isModalPopupVisible: false,
+            textOnModel:'' 
         };
     }
 
@@ -47,13 +82,33 @@ class SignupActivity extends Component {
     static navigationOptions = {
         title: 'Signup'
     };
-
+    updateUser = (user) => {
+        this.setState({ user: user })
+     }
 
     componentDidMount() {
-
+        this.focusListener= this.props.navigation.addListener('didFocus', () => {
+            console.log('props',this.props.navigation.state.params);
+            if(this.props.navigation.state.params!==undefined){
+                this.setState({gender:this.props.navigation.state.params.select});
+            }
+    });
 
     }
+    toggleModal = () => {
+        this.setState({ isModalVisible: !this.state.isModalVisible });
+    };
 
+    togglePopup = () => {
+        this.setState({ isModalPopupVisible: !this.state.isModalPopupVisible });
+    };
+    closequestionlogPopup = () => {
+
+        this.setState({ isModalPopupVisible: false });
+
+      //  this.setState({ questionlogApicalled: true }),
+      //      this.RBSheetConfirmDetails.close();
+    };
     CheckTextInput = () => {
         //Handler for the Submit onPress
         if (this.state.name != '') {
@@ -79,29 +134,49 @@ class SignupActivity extends Component {
                                         this.signupcall();
 
                                     } else {
-                                        alert(stringsoflanguages.please_accept_terms);
+                                       // Toast.show(stringsoflanguages.please_accept_terms,Toast.LONG);
+                                       this.setState({isModalPopupVisible:true});
+                                       this.setState({textOnModel:stringsoflanguages.please_accept_terms})
                                     }
 
                                 } else {
-                                    alert(stringsoflanguages.password_confirm_password_not_match);
+                                   // Toast.show(stringsoflanguages.password_confirm_password_not_match,Toast.LONG);
+                                   this.setState({isModalPopupVisible:true});
+                                   this.setState({textOnModel:stringsoflanguages.password_confirm_password_not_match})
                                 }
                             } else {
-                                alert(stringsoflanguages.please_enter_password);
+                                //Toast.show(stringsoflanguages.please_enter_password,Toast.LONG);
+                                this.setState({isModalPopupVisible:true});
+                                this.setState({textOnModel:stringsoflanguages.please_enter_password})
                             }
                         } else {
-                            alert(stringsoflanguages.please_enter_location);
+                           // Toast.show(stringsoflanguages.please_enter_location,Toast.LONG);
+                           this.setState({isModalPopupVisible:true});
+                           this.setState({textOnModel:stringsoflanguages.please_enter_location})
                         }
                     } else {
-                        alert(stringsoflanguages.please_enter_gender);
+                   //   Toast.show(stringsoflanguages.please_enter_gender,Toast.LONG);
+                      this.setState({isModalPopupVisible:true});
+                                this.setState({textOnModel:stringsoflanguages.please_enter_gender})
+                       
                     }
                 } else {
-                    alert(stringsoflanguages.please_enter_phone_number);
+                    //Toast.show(stringsoflanguages.please_enter_phone_number,Toast.LONG);
+                    this.setState({isModalPopupVisible:true});
+                    this.setState({textOnModel:stringsoflanguages.please_enter_phone_number})
+                  
                 }
             } else {
-                alert(stringsoflanguages.please_enter_email);
+               // Toast.show(stringsoflanguages.please_enter_email,Toast.LONG);
+                this.setState({isModalPopupVisible:true});
+                this.setState({textOnModel:stringsoflanguages.please_enter_email})
+               
             }
         } else {
-            alert(stringsoflanguages.please_enter_name);
+ //Toast.show(stringsoflanguages.please_enter_name,Toast.LONG);
+            this.setState({isModalPopupVisible:true});
+            this.setState({textOnModel:stringsoflanguages.please_enter_name})
+           
         }
     };
 
@@ -122,7 +197,7 @@ class SignupActivity extends Component {
                 email: this.state.email,
                 password: this.state.password,
                 phone: this.state.phone,
-                gender: this.state.gender,
+                gender: this.state.gender.value,
                 location: this.state.location,
                 device_token: ''
             }),
@@ -149,9 +224,6 @@ class SignupActivity extends Component {
 
             .done();
     }
-
-
-
     render() {
         return (
 
@@ -174,70 +246,41 @@ class SignupActivity extends Component {
                             <LinearGradient
                                 colors={['#FB3954', '#FA564C', '#F78E3C']}
                                 style={styles.linearGradient}
-                                start={{ x: 0, y: 0.5 }}
-                                end={{ x: 1, y: 0.5 }}>
+                                start={{ x: 0, y: 0.2 }}
+                                end={{ x: 1, y: 0.2 }}>
 
-
-                                <View style={{ flexDirection: 'row' }}>
-
-                                    <TouchableOpacity style={{ flex: .20, marginTop: 30 }}
+                                <View style={{alignSelf:'flex-start'}}>
+                                    <TouchableOpacity style={{ marginTop: 10,marginLeft:15}}
                                         onPress={() => { this.props.navigation.navigate('Login') }}>
 
                                         <Image source={require('../images/back_icon.png')}
                                             style={styles.backIconStyle} />
-
-
                                     </TouchableOpacity>
-
-                                    <View style={{ flex: .60 }}>
-
-
-
                                     </View>
+                                <View >
+<Image source={require('../images/Group.png')}
+    style={styles.logoStyle} />
+
+<Text style={styles.screentitle}>MENEZES PILATES</Text>
+
+</View>
 
 
-                                    <View style={{ flex: .20 }}>
+                                {/* <View style={{ flexDirection: 'row' }}> */}
 
-
-                                    </View>
-
-                                </View>
-
-
-
-                                <View style={{ flexDirection: 'row' }}>
-
-                                    <TouchableOpacity style={{ flex: .20, marginTop: 30 }}
+                                    {/* <TouchableOpacity style={{ flex: .20, marginTop:1}}
                                         onPress={() => { this.props.navigation.navigate('Login') }}>
 
 
-                                    </TouchableOpacity>
+                                    </TouchableOpacity> */} 
 
-                                    <View style={{ flex: .60 }}>
-
-                                        <Image source={require('../images/logo.png')}
-                                            style={styles.logoStyle} />
-
-                                        <Text style={styles.screentitle}>MENEZES PILATES</Text>
-
-                                    </View>
-
-
-                                    <View style={{ flex: .20 }}>
-
-
-                                    </View>
-
-                                </View>
-
-
-
+                                {/* </View> */}
 
                             </LinearGradient>
-
+                            <ScrollView>
                             <View style={{
                                 flexDirection: 'column', alignItems: 'center', backgroundColor: '#ffffff',
-                                flex: .6, width: '100%', borderTopRightRadius: 30, borderTopLeftRadius: 30
+                                 width: '100%',height:'auto', borderTopRightRadius: 30, borderTopLeftRadius: 30
                             }}>
 
                                 <Text style={styles.signuptitle}>Sign Up</Text>
@@ -277,7 +320,7 @@ class SignupActivity extends Component {
                                         placeholderTextColor="#AEB6C1"
                                         underlineColorAndroid="transparent"
                                         style={styles.input}
-                                        onChangeText={email => this.setState({ email })}
+                                        onChangeText={text => this.setState({ email: text.trim()})}
                                     />
 
 
@@ -306,34 +349,43 @@ class SignupActivity extends Component {
                                             style={styles.arrowIconStyle} />
 
                                     </View>
-
                                     <TextInput
                                         placeholder="Phone Number"
                                         placeholderTextColor="#AEB6C1"
                                         underlineColorAndroid="transparent"
                                         style={styles.inputphonenumber}
+                                        maxLength={10}
                                         keyboardType='number-pad'
                                         onChangeText={phone => this.setState({ phone })}
                                     />
-
-
                                 </View>
 
                                 <View
-                                    style={styles.inputView1}>
+                                    style={styles.inputView12}>
 
                                     <Image source={require('../images/name_red.png')}
                                         style={styles.genderIconStyle} />
+                                        <View>
+                                        <View >
+                                            <Picker
+              enableModalBlur={false}
+             placeholder="Select your gender"
+             
+              placeholderTextColor="#ADB6C1"
+              value={this.state.gender}
+              style={{fontSize:RFPercentage(2),marginTop:10,marginLeft:10,width:'80%'}}
+              hideUnderline={true}
+              onChange={items => this.setState({gender: items})}
+            //   mode={Picker.modes.MULTI}
+            //   rightIconSource={require('../images/down-arrow.png')}
+            >
+              {_.map(optionValue, option => (
+                <Picker.Item  key={option.value} value={option} disabled={option.disabled}/>
+              ))}
+            </Picker>
 
-                                    <TextInput
-                                        placeholder="Gender"
-                                        placeholderTextColor="#AEB6C1"
-                                        underlineColorAndroid="transparent"
-                                        style={styles.input}
-                                        onChangeText={gender => this.setState({ gender })}
-                                    />
-
-
+                                       </View>
+                                </View>
                                 </View>
 
                                 <View
@@ -392,31 +444,31 @@ class SignupActivity extends Component {
                                     marginTop: 15
                                 }}>
 
-                                    <CheckBox
+<CheckBox
                                         uncheckedCheckBoxColor={'#FB3954'}
                                         checkedCheckBoxColor={'#FB3954'}
                                         value={this.state.isChecked}
                                         onValueChange={() => this.setState({ isChecked: !this.state.isChecked })}
                                         onClick={() => {
-                                            this.setState({ isChecked: !this.state.isChecked })
-                                            if (!this.state.isChecked) {
-
+                                            this.setState({ isChecked: !this.state.isChecked },()=>{
+                                                if (this.state.isChecked==true) {
+                                                
                                             }
+                                            });
+                        
 
                                         }}
                                         isChecked={this.state.isChecked}
                                     />
-
+                                  <TouchableOpacity onPress={() => this.props.navigation.navigate('TermsAndCondition')}>
                                     <Text
                                         style={{
                                             marginTop: 5, color: '#06142D', marginHorizontal: 5,
                                             borderBottomWidth: 1, borderColor: '#C7E8F2', fontSize: 12
                                         }}
-                                        onPress={() => this.props.navigation.navigate('TermsCondition')}
-
-
-                                    >Accept terms and conditions</Text>
-
+                                    >Accept
+                                     <Text style={{color:'#FB3954'}}> Terms and Conditions</Text></Text>
+                                    </TouchableOpacity>
 
                                 </View>
 
@@ -428,25 +480,70 @@ class SignupActivity extends Component {
                                     onPress={this.CheckTextInput}>
 
 
-
                                     <Text style={styles.buttonWhiteTextStyle}>Sign Up</Text>
 
                                 </TouchableOpacity>
-
-
-
-
                                 <View style={{ flexDirection: 'column', alignItems: 'center' }}>
-
-                                    <View style={{ flexDirection: 'row', flex: .5 }}>
-
-
+                                    <View style={{ flexDirection: 'row', flex: .1 }}>
                                     </View>
 
                                 </View>
+                <Modal
+                        isVisible={this.state.isModalPopupVisible}
+                        style={styles.ispopupmodalvisible}
+                        hasBackdrop={true}
+                        cancelable={false}
+                        animationInTiming={300}
+                        animationOutTiming={300}
+                        backdropTransitionInTiming={300}
+                        backdropTransitionOutTiming={300}
+                    >
+
+
+                        <SafeAreaView style={{
+                            flexDirection: 'column', backgroundColor: 'white', borderTopLeftRadius: 10,
+                            borderTopRightRadius: 10, borderBottomLeftRadius: 10, borderBottomRightRadius: 10
+                            , marginLeft: 20, marginBottom: 150, marginRight: 20, marginTop: 150
+
+                        }}>
+
+                            <View style={{ flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: 50 }}>
+
+
+                                <TouchableOpacity style={{ flex: .40, alignItems: 'flex-start', justifyContent: 'center' }}
+                                    onPress={() => { }} >
+
+                                    <Image
+                                        source={APP_POPUP_LOGO}
+                                        style={{ width: 100, height: 100, borderRadius: 100 / 2, marginLeft: 10, borderWidth: 2, borderColor: 'white' }}
+                                    />
+
+                                </TouchableOpacity>
 
                             </View>
 
+                            <Text style={styles.appnamestyle}>MENEZES PILATES</Text>
+
+                            <Text style={styles.popupmsgstyle}>{this.state.textOnModel}</Text>
+
+                            <TouchableOpacity
+                                style={styles.SubmitButtonStyle}
+                                activeOpacity={.5}
+                                onPress={this.closequestionlogPopup}>
+
+                                <Text style={styles.fbText}
+                                >{stringsoflanguages.ok}</Text>
+
+                            </TouchableOpacity>
+
+
+                        </SafeAreaView>
+
+
+                    </Modal>
+
+                            </View>
+</ScrollView>
 
                         </View>
 
@@ -487,14 +584,15 @@ const styles = StyleSheet.create({
         height: 50,
         padding: 10,
         textAlign: 'left',
-        backgroundColor: 'transparent'
+        backgroundColor: 'transparent',
+        justifyContent:'center'
     },
     loginButtonStyle: {
-        marginTop: 50,
+        marginTop: 10,
         width: 250,
         height: 40,
         padding: 10,
-        marginBottom: 100,
+        marginBottom:20,
         backgroundColor: '#FB3954',
         borderRadius: 5,
         justifyContent: 'center',
@@ -506,6 +604,48 @@ const styles = StyleSheet.create({
         fontSize: 15,
         color: 'white',
         alignContent: 'center',
+    },
+    scrollViewContainer: {
+        backgroundColor: '#F0F5FE'
+
+    },
+    appnamestyle: {
+        marginTop: 50,
+        color: "#626262",
+        textAlign: 'center',
+        fontWeight: 'bold',
+        fontSize: RFPercentage(4)
+    },
+    popupmsgstyle: {
+        marginTop: 50,
+        color: "#626262",
+        textAlign: 'center',
+        fontSize: RFPercentage(3)
+    },
+    ispopupmodalvisible: {
+        alignItems: undefined,
+        justifyContent: undefined, // This is the important style you need to set
+    },
+    SubmitButtonStyle: {
+        marginTop: 50,
+        width: 300,
+        height: 40,
+        padding: 10,
+        marginBottom: 50,
+        backgroundColor: '#FB3954',
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignSelf: 'center',
+        // Setting up View inside component align horizontally center.
+        alignItems: 'center',
+        fontWeight: 'bold',
+    },
+    fbText: {
+        textAlign: 'center',
+        fontSize: 15,
+        color: 'white',
+        alignContent: 'center',
+        fontWeight: 'bold'
     },
     forgotpasswordtext: {
         fontSize: RFPercentage(1.8),
@@ -537,7 +677,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         backgroundColor: 'white',
         width: '90%',
-        marginTop: 40,
+        marginTop: 10,
         borderRadius: 10,
         elevation: 20,
         shadowColor: 'grey',
@@ -551,7 +691,23 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         backgroundColor: 'white',
         width: '90%',
-        marginTop: 20,
+        marginTop: 15,
+        position:'relative',
+        borderRadius: 10,
+        elevation: 20,
+        shadowColor: 'grey',
+        elevation: 20,
+        shadowOffset: { width: 2, height: 2 },
+        shadowOpacity: 1
+    },
+    inputView12: {
+        flexDirection:'row',
+        // alignItems: 'center',
+        // justifyContent: 'center',
+        backgroundColor: 'white',
+        height:50,
+        width: '90%',
+        marginTop: 15,
         borderRadius: 10,
         elevation: 20,
         shadowColor: 'grey',
@@ -578,7 +734,7 @@ const styles = StyleSheet.create({
     genderIconStyle: {
         height: 20,
         width: 17,
-        marginLeft: 15,
+        marginLeft: 35,
         alignSelf: 'center',
         alignItems: 'center',
         justifyContent: 'center',
@@ -610,9 +766,8 @@ const styles = StyleSheet.create({
     screentitle: {
         color: "white",
         fontSize: 18,
-        textAlign: 'center',
-        marginBottom: 20,
-
+        // textAlign: 'center',
+        marginBottom:15
     },
     signuptitle: {
         color: '#2B2F3B',
@@ -622,8 +777,8 @@ const styles = StyleSheet.create({
 
     },
     backIconStyle: {
-        height: 25,
-        width: 50,
+        height: 15,
+        width: 20,
         tintColor: 'white',
         alignSelf: 'center',
         alignItems: 'center',
@@ -633,6 +788,9 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         alignItems: 'center',
         justifyContent: 'center',
+        width: 80,
+        height: 90,
+        marginBottom:8
     },
     arrowIconStyle: {
         height: 15,
@@ -654,7 +812,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        flex: .4,
+        flex: 0,
         width: '100%'
 
     },

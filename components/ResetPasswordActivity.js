@@ -19,7 +19,7 @@ class ResetPasswordActivity extends Component {
         super(props);
         this.logincall = this.logincall.bind(this);
         this.state = {
-            baseUrl: 'https://digimonk.co/fitness/api/Api/reset_password',
+            baseUrl: 'http://3.25.67.165/api/Api/reset_password',
             confirmpassword: '',
             password: '',
             userId: '',

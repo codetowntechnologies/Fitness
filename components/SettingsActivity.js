@@ -7,22 +7,27 @@ import {
     Image,
     TextInput,
     SafeAreaView,
-    ActivityIndicator
+    ActivityIndicator,
+    Dimensions
 } from 'react-native';
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 import stringsoflanguages from '../components/locales/stringsoflanguages';
 import AsyncStorage from '@react-native-community/async-storage';
+import LinearGradient from 'react-native-linear-gradient';
 
-
+const width=Dimensions.get('window').width;
 class SettingsActivity extends Component {
 
     constructor(props) {
         super(props);
         this.logoutcall = this.logoutcall.bind(this);
         this.state = {
-            logouturl: 'https://digimonk.co/fitness/api/Api/logout',
+            logouturl: 'http://3.25.67.165/api/Api/logout',
+            profileData: 'http://3.25.67.165/api/Api/profileInfo',
             userId: '',
-            name:''
+            name:'',
+            named:'',
+            profilePic:''
         };
     }
 
@@ -39,38 +44,61 @@ class SettingsActivity extends Component {
     };
 
     componentDidMount() {
-
         AsyncStorage.getItem('@user_id').then((userId) => {
             if (userId) {
                 this.setState({ userId: userId });
                 console.log("user id ====" + this.state.userId);
-            
+               
             }
         });
-
-        AsyncStorage.getItem('@name').then((name) => {
-            if (name) {
-                this.setState({ name: name });
-                
-                console.log("name ====" + this.state.name);
-            
-            }
-        });
-
-
+        this.focusListener= this.props.navigation.addListener('didFocus', () => {
+            this.ProfileData();
+    });
     }
-
-
-
+    componentWillUnmount() {
+        // Remove the event listener
+        this.focusListener.remove();
+      }
     logout = () => {
 
         this.showLoading();
         this.logoutcall();
 
     };
+    ProfileData = () => {
+        let ProfileAPI = this.state.profileData;
+        fetch(ProfileAPI, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                id: this.state.userId
 
+            }),
+        })
+            .then(response => response.json())
+            .then(responseData => {
+                this.hideLoading();
+                if (responseData.status == '0') {
+                    this.setState({ isnoDataVisible: true })
 
-    logoutcall() {
+                } else {
+                    this.setState({ isnoDataVisible: false });
+                    this.setState({ named: responseData.data.name,profilePic:responseData.data.profilepic });
+                    
+                }
+                this.setState({ name: responseData.data.name,profilePic:responseData.data.profilepic });
+                console.log('response object:', responseData);
+            })
+            .catch(error => {
+                this.hideLoading();
+                console.error(error);
+            })
+            .done();
+    }
+
+ logoutcall() {
 
         var url = this.state.logouturl;
         console.log('logouturl:' + url);
@@ -94,9 +122,6 @@ class SettingsActivity extends Component {
                     AsyncStorage.setItem('@email', "");
                     AsyncStorage.setItem('@name', "");
                     this.props.navigation.navigate('Login')
-
-
-
                 }
                 console.log(responseData);
             })
@@ -116,11 +141,11 @@ class SettingsActivity extends Component {
                 <View style={styles.insideContainer}>
 
 
-                    <View style={{
-                        flexDirection: 'column', alignItems: 'center', justifyContent: 'center', backgroundColor: '#FB4252',
-                        flex: .3, width: '100%'
-
-                    }}>
+                <LinearGradient
+                        colors={['#FB3954', '#FA564C', '#F78E3C']}
+                        style={styles.linearGradient}
+                        start={{ x: 0, y: 0.5 }}
+                        end={{ x: 1, y: 0.5 }}>
 
                         <View style={{
                             alignItems: 'center', justifyContent: 'center',
@@ -129,18 +154,13 @@ class SettingsActivity extends Component {
                             onPress={() => { }} >
 
                             <Image
-                                source={require('../images/profile.jpg')}
-                                style={{ width: 100, height: 100, borderRadius: 100 / 2, borderWidth: 2, borderColor: 'white' }}
+                                source={this.state.profilePic!==null?{uri:'http://3.25.67.165/uploads/profile_image/'+this.state.profilePic}:require('../images/avatar.png')}
+                                style={{ width: 100, height: 100, borderRadius: 100 / 2, borderWidth: 10, borderColor: '#FF9165' }}
                             />
 
                         </View>
-
-
-                    <Text style={styles.profileNameStyle}>{this.state.name}</Text>
-
-
-
-                    </View>
+                    <Text style={styles.profileNameStyle}>{this.state.named}</Text>
+                 </LinearGradient>
 
                     <View style={{
                         flexDirection: 'column', alignItems: 'center', backgroundColor: '#ffffff',
@@ -149,32 +169,27 @@ class SettingsActivity extends Component {
 
 
                         <View style={{
-                            flexDirection: 'column', alignItems: 'center', backgroundColor: '#ffffff', flex: 1, marginTop: 20
-                        }}>
+                            flexDirection: 'column', alignItems: 'center', backgroundColor: '#ffffff', flex: 1, marginTop: 20,marginRight:width*0.3                      }}>
 
 
-                            <View style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', padding: 15 }}>
 
-                                <Image source={require('../images/setting_profile_icon.png')}
-                                    style={styles.StyleMenuIcon} />
-
-
+                                <Image source={require('../images/editProfile.png')}
+                                    style={styles.StyleProfileIcon} />
 
                                 <View style={styles.second_half_view}>
-
-                                    <Text style={styles.labeltextstyle}>{stringsoflanguages.Profile}</Text>
-
+                                   <TouchableOpacity  onPress={() => { this.props.navigation.navigate('MyProfile') }} >
+                                    <Text style={styles.labeltextstyle}>{stringsoflanguages.Edit_Profile}</Text>
+                                 </TouchableOpacity>
                                 </View>
 
                             </View>
-
-                            {/* onPress={() => { this.props.navigation.navigate('MySubscriptionVideos') }} */}
-
-                            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}
+                            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', padding: 15 }}
+                            onPress={() => { this.props.navigation.navigate('MySubscription') }}
                               >
 
-                                <Image source={require('../images/my_subscription.png')}
-                                    style={styles.StyleSubscribedVideo} />
+                                <Image source={require('../images/Mysubscription.png')}
+                                    style={styles.StyleMySubscribeVideo} />
 
 
                                 <View style={styles.second_half_view}>
@@ -186,25 +201,25 @@ class SettingsActivity extends Component {
                             </TouchableOpacity>
 
 
-                            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}
+                            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', padding: 15 }}
                                 onPress={() => { this.props.navigation.navigate('MyVideos') }}>
 
-                                <Image source={require('../images/video_setting.png')}
-                                    style={styles.StyleVideoTab} />
+                                <Image source={require('../images/subscribedVideo.png')}
+                                    style={styles.StyleSubscribedVideo} />
 
 
                                 <View style={styles.second_half_view}>
-                                    <Text style={styles.subscribe_level_text}>{stringsoflanguages.subscribed_videos}</Text>
+                                    <Text style={styles.labeltextstyle}>{stringsoflanguages.subscribed_videos}</Text>
                                 </View>
                             </TouchableOpacity>
 
 
                             
 
-                            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', padding: 10, marginTop: 5 }}
+                            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', padding: 15 }}
                              onPress={() => { this.props.navigation.navigate('ChangePassword') }}>
 
-                                <Image source={require('../images/change_password.png')}
+                                <Image source={require('../images/setting_active.png')}
                                     style={styles.StyleChangePassword} />
 
 
@@ -215,10 +230,10 @@ class SettingsActivity extends Component {
 
 
 
-                            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}
+                            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', padding: 15 }}
                                 onPress={() => { this.props.navigation.navigate('Notification') }}>
 
-                                <Image source={require('../images/notification.png')}
+                                <Image source={require('../images/bell_active.png')}
                                     style={styles.StyleNotificationIcon} />
 
 
@@ -228,11 +243,11 @@ class SettingsActivity extends Component {
                             </TouchableOpacity>
 
 
-                            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}
+                            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', padding: 15 }}
                                 onPress={() => this.props.navigation.navigate('WhoWeAre')}>
 
-                                <Image source={require('../images/who_we_are.png')}
-                                    style={styles.StyleMenuIcon} />
+                                <Image source={require('../images/whoweare.png')}
+                                    style={styles.StyleWhoWeAre} />
 
                                 <View style={styles.second_half_view}>
                                     <Text style={styles.labeltextstyle}>{stringsoflanguages.who_we_are}</Text>
@@ -242,30 +257,22 @@ class SettingsActivity extends Component {
                             </TouchableOpacity>
 
                             <TouchableOpacity
-                                style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}
+                                style={{ flexDirection: 'row', alignItems: 'center', padding: 15 }}
                                 onPress={this.logout}>
-                                {/* //   onPress={() => this.props.navigation.navigate('Login')}> */}
+                              
 
-                                <Image source={require('../images/logout_icon.png')}
-                                    style={styles.StyleMenuIcon} />
+                                <Image source={require('../images/logout.png')}
+                                    style={styles.StyleLogoutIcon} />
 
                                 <View style={styles.second_half_view}>
                                     <Text style={styles.labeltextstyle}>{stringsoflanguages.Logout}</Text>
                                 </View>
                             </TouchableOpacity>
-
-
-
                         </View>
-
-
-
                         <View style={{
                             flexDirection: 'column', alignItems: 'center', backgroundColor: '#ffffff',
-                            flex: .16, width: '100%'
+                            flex: .16, width:"100%"
                         }}>
-
-
                             <View style={styles.tabStyle}>
 
                                 <TouchableOpacity style={styles.tabButtonStyle}
@@ -288,26 +295,15 @@ class SettingsActivity extends Component {
                                     <Text style={styles.bottomvideotextstyle}>{stringsoflanguages.my_videos}</Text>
 
                                 </TouchableOpacity>
-
-
-
-                                <View style={styles.CircleShapeView}>
-
-                                    <TouchableOpacity style={{ flex: .20, alignItems: 'center', justifyContent: 'center' }}
-                                    >
-
+                                    <TouchableOpacity style={[styles.CircleShapeView,{ flex: .20, alignItems: 'center', justifyContent: 'center' }]}
+                                     onPress={()=>{ this.props.navigation.navigate('ChooseSubscription')}}>
+                                    
                                         <Image source={require('../images/plus_icon.png')}
                                             style={styles.plusiconstyle}
                                         />
 
                                         <Text style={styles.bottominactivetextstyle}>{stringsoflanguages.subscribe}</Text>
-
                                     </TouchableOpacity>
-
-
-                                </View>
-
-
                                 <TouchableOpacity style={styles.tabButtonStyle}
                                     onPress={() => { this.props.navigation.navigate('Notification') }}>
 
@@ -390,9 +386,9 @@ const styles = StyleSheet.create({
         backgroundColor: 'transparent'
     },
     labeltextstyle: {
-        color: '#4D4D4D',
+        color: '#06142D',
         marginLeft: 21,
-        fontSize: RFPercentage(2),
+        fontSize: 15,
         textAlign: 'left'
     },
 
@@ -411,7 +407,7 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     bottominactivetextstyle: {
-        color: "#887F82",
+        color: "#747A82",
         fontSize: 8,
         marginTop: 3,
         textAlign: 'center',
@@ -421,8 +417,8 @@ const styles = StyleSheet.create({
     },
     StyleHomeTab: {
         marginTop: 5,
-        width: 30,
-        height: 28,
+        width: 25,
+        height: 20,
         alignSelf: 'center',
         alignItems: 'center',
         justifyContent: 'center',
@@ -430,14 +426,14 @@ const styles = StyleSheet.create({
     StyleVideoTab: {
         marginTop: 11,
         marginRight: 10,
-        width: 38,
-        height: 23,
+        width: 25,
+        height: 16,
         alignSelf: 'center',
         alignItems: 'center',
         justifyContent: 'center',
     },
     bottomvideotextstyle: {
-        color: "#887F82",
+        color: "#747A82",
         fontSize: 8,
         marginRight: 10,
         marginTop: 3,
@@ -445,15 +441,15 @@ const styles = StyleSheet.create({
     },
     styleNotificationTab: {
         marginTop: 9,
-        width: 25,
-        height: 30,
+        width: 20,
+        height: 25,
         marginLeft: 10,
         alignSelf: 'center',
         alignItems: 'center',
         justifyContent: 'center',
     },
     bottomnotificationtextstyle: {
-        color: "#887F82",
+        color: "#747A82",
         fontSize: 8,
         marginLeft: 10,
         marginTop: 3,
@@ -461,8 +457,8 @@ const styles = StyleSheet.create({
     },
     StyleProfileTab: {
         marginTop: 9,
-        width: 30,
-        height: 30,
+        width: 25,
+        height: 25,
         alignSelf: 'center',
         alignItems: 'center',
         justifyContent: 'center',
@@ -493,6 +489,13 @@ const styles = StyleSheet.create({
         margin: 10,
         width: 300
     },
+    StyleWhoWeAre: {
+        width: 16,
+        height: 19,
+        alignSelf: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
     StyleMenuIcon: {
         width: 30,
         height: 35,
@@ -500,23 +503,44 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    StyleLogoutIcon: {
+        width: 20,
+        height: 19,
+        alignSelf: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    StyleProfileIcon: {
+        width: 19,
+        height: 22,
+        alignSelf: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
     StyleNotificationIcon: {
-        width: 33,
-        height: 44,
+        width: 20,
+        height: 25,
         alignSelf: 'center',
         alignItems: 'center',
         justifyContent: 'center',
     },
     StyleChangePassword: {
-        width: 35,
-        height: 35,
+        width: 20,
+        height: 20,
+        alignSelf: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    StyleMySubscribeVideo: {
+        width: 20,
+        height: 20,
         alignSelf: 'center',
         alignItems: 'center',
         justifyContent: 'center',
     },
     StyleSubscribedVideo: {
-        width: 35,
-        height: 35,
+        width: 20,
+        height: 20,
         alignSelf: 'center',
         alignItems: 'center',
         justifyContent: 'center',
@@ -531,14 +555,14 @@ const styles = StyleSheet.create({
         color: 'white',
         marginLeft: 10,
         marginTop: 20,
-        fontSize: RFPercentage(2),
+        fontSize: 20,
         textAlign: 'center'
 
     },
     CircleShapeView: {
-        width: 70,
-        height: 70,
-        borderRadius: 70 / 2,
+        width: 66,
+        height: 66,
+        borderRadius: 66 / 2,
         marginBottom: 50,
         backgroundColor: 'white',
         shadowColor: '#ecf6fb',
@@ -548,14 +572,20 @@ const styles = StyleSheet.create({
         shadowOpacity: 1
     },
     plusiconstyle: {
-        height: 30,
-        width: 30,
-        marginTop: 60,
+        height: 21,
+        width: 21,
         alignSelf: 'center',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'center'
     },
+    linearGradient: {
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flex: .4,
+        width: '100%'
 
+    },
 
 });
 

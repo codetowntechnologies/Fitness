@@ -7,11 +7,14 @@ import {
     TouchableOpacity,
     Image,
     ActivityIndicator,
+    SafeAreaView
 } from 'react-native';
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 import stringsoflanguages from './locales/stringsoflanguages';
 import AsyncStorage from '@react-native-community/async-storage';
 import LinearGradient from 'react-native-linear-gradient';
+import Modal from 'react-native-modal';
+const APP_POPUP_LOGO = require('../images/Group.png');
 
 class ForgotPasswordActivity extends Component {
 
@@ -19,9 +22,10 @@ class ForgotPasswordActivity extends Component {
         super(props);
         this.forgotCall = this.forgotCall.bind(this);
         this.state = {
-            baseUrl: 'https://digimonk.co/fitness/api/Api/forgot_password',
+            baseUrl: 'http://3.25.67.165/api/Api/forgot_password',
             phonenumber: '',
             password: '',
+            textOnModel:''
         };
     }
 
@@ -51,8 +55,22 @@ class ForgotPasswordActivity extends Component {
             this.forgotCall();
 
         } else {
-            alert(stringsoflanguages.please_enter_phone_number);
+            this.setState({textOnModel:stringsoflanguages.please_enter_phone_number})
         }
+    };
+    toggleModal = () => {
+        this.setState({ isModalVisible: !this.state.isModalVisible });
+    };
+
+    togglePopup = () => {
+        this.setState({ isModalPopupVisible: !this.state.isModalPopupVisible });
+    };
+    closequestionlogPopup = () => {
+
+        this.setState({ isModalPopupVisible: false });
+
+      //  this.setState({ questionlogApicalled: true }),
+      //      this.RBSheetConfirmDetails.close();
     };
 
 
@@ -73,9 +91,11 @@ class ForgotPasswordActivity extends Component {
             .then(responseData => {
                 this.hideLoading();
                 if (responseData.status == '0') {
-                    alert(responseData.message);
+                    this.setState({isModalPopupVisible:true});
+                    this.setState({textOnModel:responseData.message})
                 } else {
-
+                    this.setState({isModalPopupVisible:true});
+                    this.setState({textOnModel:responseData.message})
                     console.log("response data id ===" + responseData.data.id)
                     AsyncStorage.setItem('@user_id', responseData.data.id.toString());
 
@@ -169,6 +189,69 @@ class ForgotPasswordActivity extends Component {
 
 
                     </LinearGradient>
+                    <Modal
+                        isVisible={this.state.isModalPopupVisible}
+                        style={styles.ispopupmodalvisible}
+                        hasBackdrop={true}
+                        cancelable={false}
+                        animationInTiming={300}
+                        animationOutTiming={300}
+                        backdropTransitionInTiming={300}
+                        backdropTransitionOutTiming={300}
+                    >
+
+
+                        <SafeAreaView style={{
+                            flexDirection: 'column', backgroundColor: 'white', borderTopLeftRadius: 10,
+                            borderTopRightRadius: 10, borderBottomLeftRadius: 10, borderBottomRightRadius: 10
+                            , marginLeft: 20, marginBottom: 150, marginRight: 20, marginTop: 150,width:320
+
+                        }}>
+
+                            <View style={{ flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: 50 }}>
+
+
+                                <TouchableOpacity style={{ flex: .40, alignItems: 'flex-start', justifyContent: 'center' }}
+                                    onPress={() => { }} >
+
+                                    <Image
+                                        source={APP_POPUP_LOGO}
+                                        style={{ width: 100, height: 100, borderRadius: 100 / 2, marginLeft: 10, borderWidth: 2, borderColor: 'white' }}
+                                    />
+
+                                </TouchableOpacity>
+
+                            </View>
+
+                            <Text style={styles.appnamestyle}>MENEZES PILATES</Text>
+
+                            <Text style={styles.popupmsgstyle}>{this.state.textOnModel}</Text>
+                              <View style={{flexDirection:'row',justifyContent:'center',alignItems:'center'}}>
+                            <TouchableOpacity
+                                style={styles.SubmitButtonStyle}
+                                activeOpacity={.5}
+                                onPress={()=>{this.setState({isModalPopupVisible:false})}}>
+
+                                <Text style={styles.fbText}
+                                >OK</Text>
+
+                            </TouchableOpacity>
+                            {/* <TouchableOpacity
+                                style={styles.cancelButtonStyle}
+                                activeOpacity={.5}
+                                onPress={()=>{this.setState({isModalPopupVisible:false})}}>
+
+                                <Text style={styles.fbText}
+                                >NO</Text>
+
+                            </TouchableOpacity> */}
+                            </View>
+
+
+                        </SafeAreaView>
+
+
+                    </Modal>
 
                     <View style={{
                         flexDirection: 'column', alignItems: 'center', backgroundColor: '#ffffff',
@@ -266,6 +349,59 @@ const styles = StyleSheet.create({
         fontSize: RFValue(10, 580),
         textAlign: 'center',
         color: '#FFC33B',
+        fontWeight: 'bold'
+    },
+    appnamestyle: {
+        marginTop: 50,
+        color: "#626262",
+        textAlign: 'center',
+        fontWeight: 'bold',
+        fontSize: RFPercentage(4)
+    },
+    popupmsgstyle: {
+        marginTop: 50,
+        color: "#626262",
+        textAlign: 'center',
+        fontSize: RFPercentage(3)
+    },
+    ispopupmodalvisible: {
+        alignItems: undefined,
+        justifyContent: undefined, // This is the important style you need to set
+    },
+    SubmitButtonStyle: {
+        marginTop: 20,
+        width: 100,
+        height: 40,
+        padding: 10,
+        marginBottom: 20,
+        backgroundColor: '#FB3954',
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignSelf: 'center',
+        // Setting up View inside component align horizontally center.
+        alignItems: 'center',
+        fontWeight: 'bold',
+    },
+    cancelButtonStyle: {
+        marginTop: 8,
+        width: 100,
+        marginLeft:10,
+        height: 40,
+        padding: 10,
+        marginBottom: 20,
+        backgroundColor: '#FB3954',
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignSelf: 'center',
+        // Setting up View inside component align horizontally center.
+        alignItems: 'center',
+        fontWeight: 'bold',
+    },
+    fbText: {
+        textAlign: 'center',
+        fontSize: 15,
+        color: 'white',
+        alignContent: 'center',
         fontWeight: 'bold'
     },
     input: {
@@ -382,7 +518,7 @@ const styles = StyleSheet.create({
     },
     backIconStyle: {
         height: 25,
-        width: 50,
+        width: 30,
         tintColor: 'white',
         alignSelf: 'center',
         alignItems: 'center',

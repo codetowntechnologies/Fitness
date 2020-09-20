@@ -17,7 +17,7 @@ import OTPActivity from './components/OTPActivity';
 import ForgetOtpActivity from './components/ForgetOtpActivity';
 import ResetPasswordActivity from './components/ResetPasswordActivity';
 import ChangePasswordActivity from './components/ChangePasswordActivity';
-
+import MyVideosDetailActivity from './components/MyVideosDetailActivity';
 
 
 
@@ -40,6 +40,7 @@ const NavStack = createStackNavigator(
         ForgetOtp : {screen : ForgetOtpActivity},
         ResetPassword : {screen : ResetPasswordActivity},
         ChangePassword : {screen : ChangePasswordActivity},
+        MyVideosDetail : {screen : MyVideosDetailActivity},
         
     },
     {

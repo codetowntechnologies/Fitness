@@ -1,64 +1,60 @@
 import React, { Component } from 'react';
-import { AppRegistry, StyleSheet, FlatList, Text, View, Alert, Platform } from 'react-native';
- 
+import { AppRegistry, StyleSheet, FlatList, Text, View, Alert, Platform, Dimensions } from 'react-native';
+
+const width= Dimensions.get('window').width;
+const height=Dimensions.get('window').height;
+import { Container, Content, Picker,Header,Button,Title } from 'native-base';
+
+const Item = Picker.Item;
 class MySubscriptionVideosActivity extends Component {
  
  constructor(props)
  {
    super(props);
  
-   this.state = { GridViewItems: [
-     {key: 'One'},
-     {key: 'Two'},
-     {key: 'Three'},
-     {key: 'Four'},
-     {key: 'Five'},
-     {key: 'Six'},
-     {key: 'Seven'},
-     {key: 'Eight'},
-     {key: 'Nine'},
-     {key: 'Ten'},
-     {key: 'Eleven'},
-     {key: 'Twelve'},
-     {key: 'Thirteen'},
-     {key: 'Fourteen'},
-     {key: 'Fifteen'},
-     {key: 'Sixteen'},
-     {key: 'Seventeen'},
-     {key: 'Eighteen'},
-     {key: 'Nineteen'},
-     {key: 'Twenty'}
-   ]}
- }
- 
- GetGridViewItem (item) {
-  
- Alert.alert(item);
+   this.state = {
+    selected1: '',
+    results: {
+        items: []
+    }
+}
  
  }
- 
+ onValueChange (value: string) {
+  this.setState({
+      selected1 : value
+  });
+  this.props.navigation.navigate('MyProfile',{select:value});
+}
  
  render() {
    return (
  
-<View style={styles.MainContainer}>
- 
-      <FlatList
-      
-         data={ this.state.GridViewItems }
- 
-         renderItem={({item}) =><View style={styles.GridViewBlockStyle}>
- 
-            <Text style={styles.GridViewInsideTextItemStyle} onPress={this.GetGridViewItem.bind(this, item.key)} > {item.key} </Text>
-            
-            </View>}
- 
-         numColumns={3}
- 
-        />
+<Container>
+                <Content>
+                    <Picker
+                        headerComponent={
+                            <Header>
+                                <Button transparent>
+                                    Custom Back
+                                </Button>
+                                <Title>Custom Header</Title>
+                            </Header>
+                        }
+                        mode='dropdown'
+                        // placeholder="select gender"
+                        style={{marginTop:10}}
+                        selectedValue={this.state.selected1}
+                        onValueChange={this.onValueChange.bind(this)}>
+                        <Item label="Select your gender" />
+                        <Item label='Male' value='Male' />
+                        <Item label='Female' value='Female' />
+                        <Item label='Other' value='Other' />
+                   </Picker>
+                </Content>
+            </Container>
+     
    
-   
-</View>
            
    );
  }
@@ -70,7 +66,7 @@ MainContainer :{
  
 justifyContent: 'center',
 flex:1,
-margin: 10,
+margin: width*0.05,
 paddingTop: (Platform.OS) === 'ios' ? 20 : 0
  
 },
